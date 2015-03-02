@@ -1,0 +1,8 @@
+<table class="request-headers">
+    {{ it.headers.forEach(function (header) { }}
+    <tr>
+        <td>{{= header.name }}</td>
+        <td>{{= header.value }}</td>
+    </tr>
+    {{ }); }}
+</table>

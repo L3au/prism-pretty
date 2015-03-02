@@ -1,0 +1,133 @@
+.hidden() {
+    position: absolute;
+    visibility: hidden;
+    left: -999em;
+    top: -999em;
+    opacity: 0;
+}
+
+.shown() {
+    position: static;
+    visibility: visible;
+    opacity: 1;
+}
+
+html {
+    opacity: 0;
+    transition: transform .3s ease-out, opacity .1s linear;
+}
+
+.popup-show {
+    opacity: 1;
+}
+
+.container {
+    position: relative;
+    width: 320px;
+    height: 516px;
+    box-sizing: border-box;
+}
+
+h1 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font: 300 18px "Helvetica Neue", Helvetica;
+    -webkit-font-smoothing: antialiased;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2) {
+    h1 {
+        font-weight: lighter;
+    }
+}
+
+.help {
+    position: absolute;
+    right: 5px;
+    top: 9px;
+    display: flex;
+    width: 200px;
+    font-size: 12px;
+    list-style-type: none;
+    justify-content: space-between;
+}
+
+textarea {
+    height: 60px !important;
+    margin-bottom: 15px;
+}
+
+.options-form {
+    .option {
+        > small {
+            position: absolute;
+            margin-top: .5em;
+            font-size: 10px;
+            opacity: 0;
+            visibility: hidden;
+            white-space: nowrap;
+            transition: 0.3s ease-out;
+        }
+
+        .form-control {
+            display: inline-block;
+            height: 34px;
+            padding: 4px .5em;
+            font-size: 13px;
+        }
+
+        .form-control-error {
+            border-color: #e74c3c;
+            box-shadow: none;
+        }
+
+        [class^=fui] {
+            display: inline-block;
+            width: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            vertical-align: middle;
+            opacity: 0.6;
+            transition: .25s;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+
+    .option-label {
+        width: 70px;
+    }
+
+    .radio-wrap {
+        display: inline-block;
+    }
+
+    .radio {
+        display: inline-block;
+        padding-left: 25px;
+        cursor: pointer;
+    }
+
+    .radio .icons:before {
+        content: none !important;
+    }
+
+    .disabled {
+        pointer-events: none;
+    }
+
+    .btn {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 8px;
+        font-size: 15px;
+    }
+
+    .bootstrap-switch-on:not(.bootstrap-switch-disabled):hover + small {
+        opacity: 1;
+        visibility: visible;
+    }
+}

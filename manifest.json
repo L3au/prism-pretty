@@ -1,0 +1,38 @@
+{
+    "manifest_version": 2,
+    "name": "Prism Pretty",
+    "version": "1.0.8",
+    "author": "L3au",
+    "description": "A Chrome Extension to format/highlight HTML/JS/CSS code with Prism.js",
+    "minimum_chrome_version": "31.0.1650.8",
+    "permissions": ["tabs", "<all_urls>", "webRequest", "webRequestBlocking", "storage", "contextMenus"],
+    "update_url": "http://clients2.google.com/service/update2/crx",
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "css": ["css/prism.css"],
+            "js": ["js/esprima.js", "content.js"],
+            "run_at": "document_start"
+        }
+    ],
+    "web_accessible_resources": [
+        "js/*",
+        "css/*",
+        "html/*",
+        "worker/*"
+    ],
+    "browser_action": {
+        "default_icon": "icon/icon_128.png",
+        "default_title": "Prism Pretty",
+        "default_popup": "html/popup.html"
+    },
+    "icons": {
+        "16": "icon/icon_16.png",
+        "48": "icon/icon_48.png",
+        "128": "icon/icon_128.png"
+    }
+}

@@ -1,0 +1,973 @@
+<div class="preview-wrap">
+<div id="color" class="previewer"></div>
+<div id="abslength" class="previewer"></div>
+<div id="time" class="previewer">
+    <svg>
+        <circle cx="32" cy="32" r="15.9">
+            <animate attributeName="stroke-dasharray" values="0,500;100,500;0,500" dur="5s" repeatCount="indefinite" />
+            <animate attributeName="stroke-dashoffset" values="0;0;-100" dur="5s" repeatCount="indefinite" />
+        </circle>
+    </svg>
+</div>
+<div id="angle" class="previewer">
+    <svg>
+        <circle cx="32" cy="32" r="15.9" stroke-dasharray="0,500" />
+    </svg>
+</div>
+<div id="fontfamily" class="previewer">(ABCabc123&amp;@%) (ABCabc123&amp;@%)
+</div>
+<div id="gradient" class="previewer"><div></div></div>
+<div id="easing" class="previewer">
+    <svg width="100" height="100" viewBox="-20 -20 140 140">
+        <defs>
+            <marker id="marker" viewBox="0 0 4 4" refX="2" refY="2" markerUnits="strokeWidth">
+                <circle cx="2" cy="2" r="1.5" />
+            </marker>
+        </defs>
+        <path d="M0,100 C20,50, 40,30, 100,0" />
+        <line x1="0" y1="100" x2="20" y2="50" />
+        <line x1="100" y1="0" x2="40" y2="30" />
+    </svg>
+</div>
+<div id="url" class="previewer">
+    <img src="data:," alt="Loading…" />
+</div>
+<div id="entity" class="previewer"></div>
+<style>
+@-webkit-keyframes previewer {
+    from {
+        -webkit-transform: scale(.1);
+        transform: scale(.1);
+    }
+    to {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+</style>
+<script>
+(function () {
+    /**
+     * StyleFix 1.0.3 & PrefixFree 1.0.7
+     * @author Lea Verou
+     * MIT license
+     */
+    (function() {
+
+        if (!window.addEventListener) {
+            return;
+        }
+
+        var self = window.StyleFix = {
+            link: function(link) {
+                try {
+                    // Ignore stylesheets with data-noprefix attribute as well as alternate stylesheets
+                    if (link.rel !== 'stylesheet' || link.hasAttribute('data-noprefix')) {
+                        return;
+                    }
+                } catch (e) {
+                    return;
+                }
+
+                var url = link.href || link.getAttribute('data-href'),
+                    base = url.replace(/[^\/]+$/, ''),
+                    base_scheme = (/^[a-z]{3,10}:/.exec(base) || [''])[0],
+                    base_domain = (/^[a-z]{3,10}:\/\/[^\/]+/.exec(base) || [''])[0],
+                    base_query = /^([^?]*)\??/.exec(url)[1],
+                    parent = link.parentNode,
+                    xhr = new XMLHttpRequest(),
+                    process;
+
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        process();
+                    }
+                };
+
+                process = function() {
+                    var css = xhr.responseText;
+
+                    if (css && link.parentNode && (!xhr.status || xhr.status < 400 || xhr.status > 600)) {
+                        css = self.fix(css, true, link);
+
+                        // Convert relative URLs to absolute, if needed
+                        if (base) {
+                            css = css.replace(/url\(\s*?((?:"|')?)(.+?)\1\s*?\)/gi, function($0, quote, url) {
+                                if (/^([a-z]{3,10}:|#)/i.test(url)) { // Absolute & or hash-relative
+                                    return $0;
+                                } else if (/^\/\//.test(url)) { // Scheme-relative
+                                    // May contain sequences like /../ and /./ but those DO work
+                                    return 'url("' + base_scheme + url + '")';
+                                } else if (/^\//.test(url)) { // Domain-relative
+                                    return 'url("' + base_domain + url + '")';
+                                } else if (/^\?/.test(url)) { // Query-relative
+                                    return 'url("' + base_query + url + '")';
+                                } else {
+                                    // Path-relative
+                                    return 'url("' + base + url + '")';
+                                }
+                            });
+
+                            // behavior URLs shoudn’t be converted (Issue #19)
+                            // base should be escaped before added to RegExp (Issue #81)
+                            var escaped_base = base.replace(/([\\\^\$*+[\]?{}.=!:(|)])/g, "\\$1");
+                            css = css.replace(RegExp('\\b(behavior:\\s*?url\\(\'?"?)' + escaped_base, 'gi'), '$1');
+                        }
+
+                        var style = document.createElement('style');
+                        style.textContent = css;
+                        style.media = link.media;
+                        style.disabled = link.disabled;
+                        style.setAttribute('data-href', link.getAttribute('href'));
+
+                        parent.insertBefore(style, link);
+                        parent.removeChild(link);
+
+                        style.media = link.media; // Duplicate is intentional. See issue #31
+                    }
+                };
+
+                try {
+                    xhr.open('GET', url);
+                    xhr.send(null);
+                } catch (e) {
+                    // Fallback to XDomainRequest if available
+                    if (typeof XDomainRequest != "undefined") {
+                        xhr = new XDomainRequest();
+                        xhr.onerror = xhr.onprogress = function() {};
+                        xhr.onload = process;
+                        xhr.open("GET", url);
+                        xhr.send(null);
+                    }
+                }
+
+                link.setAttribute('data-inprogress', '');
+            },
+
+            styleElement: function(style) {
+                if (style.hasAttribute('data-noprefix')) {
+                    return;
+                }
+                var disabled = style.disabled;
+
+                style.textContent = self.fix(style.textContent, true, style);
+
+                style.disabled = disabled;
+            },
+
+            styleAttribute: function(element) {
+                var css = element.getAttribute('style');
+
+                css = self.fix(css, false, element);
+
+                element.setAttribute('style', css);
+            },
+
+            process: function() {
+                // Linked stylesheets
+                $('link[rel="stylesheet"]:not([data-inprogress])').forEach(StyleFix.link);
+
+                // Inline stylesheets
+                $('style').forEach(StyleFix.styleElement);
+
+                // Inline styles
+                $('[style]').forEach(StyleFix.styleAttribute);
+            },
+
+            register: function(fixer, index) {
+                (self.fixers = self.fixers || [])
+                    .splice(index === undefined ? self.fixers.length : index, 0, fixer);
+            },
+
+            fix: function(css, raw, element) {
+                for (var i = 0; i < self.fixers.length; i++) {
+                    css = self.fixers[i](css, raw, element) || css;
+                }
+
+                return css;
+            },
+
+            camelCase: function(str) {
+                return str.replace(/-([a-z])/g, function($0, $1) {
+                    return $1.toUpperCase();
+                }).replace('-', '');
+            },
+
+            deCamelCase: function(str) {
+                return str.replace(/[A-Z]/g, function($0) {
+                    return '-' + $0.toLowerCase()
+                });
+            }
+        };
+
+        /**************************************
+         * Process styles
+         **************************************/ (function() {
+            setTimeout(function() {
+                $('link[rel="stylesheet"]').forEach(StyleFix.link);
+            }, 10);
+
+            document.addEventListener('DOMContentLoaded', StyleFix.process, false);
+        })();
+
+        function $(expr, con) {
+            return [].slice.call((con || document).querySelectorAll(expr));
+        }
+
+    })();
+
+    /**
+     * PrefixFree
+     */ (function(root) {
+
+        if (!window.StyleFix || !window.getComputedStyle) {
+            return;
+        }
+
+        // Private helper
+        function fix(what, before, after, replacement, css) {
+            what = self[what];
+
+            if (what.length) {
+                var regex = RegExp(before + '(' + what.join('|') + ')' + after, 'gi');
+
+                css = css.replace(regex, replacement);
+            }
+
+            return css;
+        }
+
+        var self = window.PrefixFree = {
+            prefixCSS: function(css, raw, element) {
+                var prefix = self.prefix;
+
+                // Gradient angles hotfix
+                if (self.functions.indexOf('linear-gradient') > -1) {
+                    // Gradients are supported with a prefix, convert angles to legacy
+                    css = css.replace(/(\s|:|,)(repeating-)?linear-gradient\(\s*(-?\d*\.?\d*)deg/ig, function($0, delim, repeating, deg) {
+                        return delim + (repeating || '') + 'linear-gradient(' + (90 - deg) + 'deg';
+                    });
+                }
+
+                css = fix('functions', '(\\s|:|,)', '\\s*\\(', '$1' + prefix + '$2(', css);
+                css = fix('keywords', '(\\s|:)', '(\\s|;|\\}|$)', '$1' + prefix + '$2$3', css);
+                css = fix('properties', '(^|\\{|\\s|;)', '\\s*:', '$1' + prefix + '$2:', css);
+
+                // Prefix properties *inside* values (issue #8)
+                if (self.properties.length) {
+                    var regex = RegExp('\\b(' + self.properties.join('|') + ')(?!:)', 'gi');
+
+                    css = fix('valueProperties', '\\b', ':(.+?);', function($0) {
+                        return $0.replace(regex, prefix + "$1")
+                    }, css);
+                }
+
+                if (raw) {
+                    css = fix('selectors', '', '\\b', self.prefixSelector, css);
+                    css = fix('atrules', '@', '\\b', '@' + prefix + '$1', css);
+                }
+
+                // Fix double prefixing
+                css = css.replace(RegExp('-' + prefix, 'g'), '-');
+
+                // Prefix wildcard
+                css = css.replace(/-\*-(?=[a-z]+)/gi, self.prefix);
+
+                return css;
+            },
+
+            property: function(property) {
+                return (self.properties.indexOf(property) >= 0 ? self.prefix : '') + property;
+            },
+
+            value: function(value, property) {
+                value = fix('functions', '(^|\\s|,)', '\\s*\\(', '$1' + self.prefix + '$2(', value);
+                value = fix('keywords', '(^|\\s)', '(\\s|$)', '$1' + self.prefix + '$2$3', value);
+
+                if (self.valueProperties.indexOf(property) >= 0) {
+                    value = fix('properties', '(^|\\s|,)', '($|\\s|,)', '$1' + self.prefix + '$2$3', value);
+                }
+
+                return value;
+            },
+
+            // Warning: Prefixes no matter what, even if the selector is supported prefix-less
+            prefixSelector: function(selector) {
+                return selector.replace(/^:{1,2}/, function($0) {
+                    return $0 + self.prefix
+                })
+            },
+
+            // Warning: Prefixes no matter what, even if the property is supported prefix-less
+            prefixProperty: function(property, camelCase) {
+                var prefixed = self.prefix + property;
+
+                return camelCase ? StyleFix.camelCase(prefixed) : prefixed;
+            }
+        };
+
+        /**************************************
+         * Properties
+         **************************************/ (function() {
+            var prefixes = {},
+            properties = [],
+                shorthands = {},
+                style = getComputedStyle(document.documentElement, null),
+                dummy = document.createElement('div').style;
+
+            // Why are we doing this instead of iterating over properties in a .style object? Cause Webkit won't iterate over those.
+            var iterate = function(property) {
+                if (property.charAt(0) === '-') {
+                    properties.push(property);
+
+                    var parts = property.split('-'),
+                        prefix = parts[1];
+
+                    // Count prefix uses
+                    prefixes[prefix] = ++prefixes[prefix] || 1;
+
+                    // This helps determining shorthands
+                    while (parts.length > 3) {
+                        parts.pop();
+
+                        var shorthand = parts.join('-');
+
+                        if (supported(shorthand) && properties.indexOf(shorthand) === -1) {
+                            properties.push(shorthand);
+                        }
+                    }
+                }
+            },
+            supported = function(property) {
+                return StyleFix.camelCase(property) in dummy;
+            }
+
+            // Some browsers have numerical indices for the properties, some don't
+            if (style.length > 0) {
+                for (var i = 0; i < style.length; i++) {
+                    iterate(style[i])
+                }
+            } else {
+                for (var property in style) {
+                    iterate(StyleFix.deCamelCase(property));
+                }
+            }
+
+            // Find most frequently used prefix
+            var highest = {
+                uses: 0
+            };
+            for (var prefix in prefixes) {
+                var uses = prefixes[prefix];
+
+                if (highest.uses < uses) {
+                    highest = {
+                        prefix: prefix,
+                        uses: uses
+                    };
+                }
+            }
+
+            self.prefix = '-' + highest.prefix + '-';
+            self.Prefix = StyleFix.camelCase(self.prefix);
+
+            self.properties = [];
+
+            // Get properties ONLY supported with a prefix
+            for (var i = 0; i < properties.length; i++) {
+                var property = properties[i];
+
+                if (property.indexOf(self.prefix) === 0) { // we might have multiple prefixes, like Opera
+                    var unprefixed = property.slice(self.prefix.length);
+
+                    if (!supported(unprefixed)) {
+                        self.properties.push(unprefixed);
+                    }
+                }
+            }
+
+            // IE fix
+            if (self.Prefix == 'Ms' && !('transform' in dummy) && !('MsTransform' in dummy) && ('msTransform' in dummy)) {
+                self.properties.push('transform', 'transform-origin');
+            }
+
+            self.properties.sort();
+        })();
+
+        /**************************************
+         * Values
+         **************************************/ (function() {
+            // Values that might need prefixing
+            var functions = {
+                'linear-gradient': {
+                    property: 'backgroundImage',
+                    params: 'red, teal'
+                },
+                'calc': {
+                    property: 'width',
+                    params: '1px + 5%'
+                },
+                'element': {
+                    property: 'backgroundImage',
+                    params: '#foo'
+                },
+                'cross-fade': {
+                    property: 'backgroundImage',
+                    params: 'url(a.png), url(b.png), 50%'
+                }
+            };
+
+
+            functions['repeating-linear-gradient'] = functions['repeating-radial-gradient'] = functions['radial-gradient'] = functions['linear-gradient'];
+
+            // Note: The properties assigned are just to *test* support.
+            // The keywords will be prefixed everywhere.
+            var keywords = {
+                'initial': 'color',
+                'zoom-in': 'cursor',
+                'zoom-out': 'cursor',
+                'box': 'display',
+                'flexbox': 'display',
+                'inline-flexbox': 'display',
+                'flex': 'display',
+                'inline-flex': 'display',
+                'grid': 'display',
+                'inline-grid': 'display',
+                'min-content': 'width'
+            };
+
+            self.functions = [];
+            self.keywords = [];
+
+            var style = document.createElement('div').style;
+
+            function supported(value, property) {
+                style[property] = '';
+                style[property] = value;
+
+                return !!style[property];
+            }
+
+            for (var func in functions) {
+                var test = functions[func],
+                    property = test.property,
+                    value = func + '(' + test.params + ')';
+
+                if (!supported(value, property) && supported(self.prefix + value, property)) {
+                    // It's supported, but with a prefix
+                    self.functions.push(func);
+                }
+            }
+
+            for (var keyword in keywords) {
+                var property = keywords[keyword];
+
+                if (!supported(keyword, property) && supported(self.prefix + keyword, property)) {
+                    // It's supported, but with a prefix
+                    self.keywords.push(keyword);
+                }
+            }
+
+        })();
+
+        /**************************************
+         * Selectors and @-rules
+         **************************************/ (function() {
+
+            var
+            selectors = {
+                ':read-only': null,
+                ':read-write': null,
+                ':any-link': null,
+                '::selection': null
+            },
+
+            atrules = {
+                'keyframes': 'name',
+                'viewport': null,
+                'document': 'regexp(".")'
+            };
+
+            self.selectors = [];
+            self.atrules = [];
+
+            var style = root.appendChild(document.createElement('style'));
+
+            function supported(selector) {
+                style.textContent = selector + '{}'; // Safari 4 has issues with style.innerHTML
+
+                return !!style.sheet.cssRules.length;
+            }
+
+            for (var selector in selectors) {
+                var test = selector + (selectors[selector] ? '(' + selectors[selector] + ')' : '');
+
+                if (!supported(test) && supported(self.prefixSelector(test))) {
+                    self.selectors.push(selector);
+                }
+            }
+
+            for (var atrule in atrules) {
+                var test = atrule + ' ' + (atrules[atrule] || '');
+
+                if (!supported('@' + test) && supported('@' + self.prefix + test)) {
+                    self.atrules.push(atrule);
+                }
+            }
+
+            root.removeChild(style);
+
+        })();
+
+        // Properties that accept properties as their value
+        self.valueProperties = ['transition', 'transition-property']
+
+        // Add class for current prefix
+        root.className += ' ' + self.prefix;
+
+        StyleFix.register(self.prefixCSS);
+
+
+    })(document.documentElement);
+
+
+    function $(expr, con) {
+        return typeof expr === 'string'? (con || document).querySelector(expr) : expr;
+    }
+
+    function $$(expr, con) {
+        return Array.prototype.slice.call((con || document).querySelectorAll(expr));
+    }
+
+    /**
+     * Code for the value previewers
+     */
+    function offset(element) {
+        var left = 0, top = 0, el = element;
+
+        if (el.parentNode) {
+            do {
+                left += el.offsetLeft;
+                top += el.offsetTop;
+            } while ((el = el.offsetParent) && el.nodeType < 9);
+
+            el = element;
+
+            do {
+                left -= el.scrollLeft;
+                top -= el.scrollTop;
+            } while ((el = el.parentNode) && !/body/i.test(el.nodeName));
+        }
+
+        return {
+            top: top,
+            right: innerWidth - left - element.offsetWidth,
+            bottom: innerHeight - top - element.offsetHeight,
+            left: left,
+        };
+    }
+
+    (function() {
+
+        var _ = self.Previewer = function(id, updater, type) {
+            _.s[id] = this;
+
+            this.previewer = document.getElementById(id);
+            this.updater = updater;
+            this.type = type || 'css';
+            this._token = null;
+
+            Object.defineProperty(this, 'token', {
+                get: function() {
+                    return this._token;
+                },
+                set: function(token) {
+                    // Hide all previewers except this
+                    if (token !== null) {
+                        _.hideAll(id);
+                    }
+
+                    var oldToken = this._token,
+                        changedToken = oldToken != token,
+                        previewer = this.previewer,
+                        style = previewer.style;
+
+                    this._token = token;
+
+                    if (token && token.parentNode) {
+                        var valid = this.updater.call(previewer, token.textContent);
+
+                        if (valid) {
+                            previewer.classList.add('active');
+
+                            if (changedToken) {
+                                var offsets = offset(token),
+                                    property;
+
+
+                                if (offsets.top - previewer.offsetHeight > 0) {
+                                    property = 'bottom';
+                                    previewer.classList.remove('flipped');
+                                } else {
+                                    property = 'top';
+                                    previewer.classList.add('flipped');
+                                }
+
+                                style.bottom = style.top = '';
+                                style[property] = offsets[property] + token.offsetHeight + 'px';
+                                style.left = offsets.left + Math.min(200, token.offsetWidth / 2) + 'px';
+                            }
+                        }
+                    }
+
+                    if (!token || !valid && oldToken) {
+                        previewer.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        _.prototype = {
+
+        };
+
+        _.s = {};
+
+        _.hideAll = function(except) {
+            var all = _.s;
+
+            for (var id in all) {
+                if (!except || except !== id) {
+                    all[id].token = null;
+                }
+            }
+        };
+
+        _.get = function(token) {
+            var type = (token && token.className.match(/^token ([\w-]+)/) || [])[1];
+
+            return type in _.s ? type : null;
+        }
+
+        _._active = null;
+        Object.defineProperty(_, 'active', {
+            get: function() {
+                return this._active;
+            },
+            set: function(token) {
+                var oldToken = this._active;
+
+                this._active = token;
+
+                if (oldToken) {
+                    oldToken.removeAttribute('data-active');
+                }
+
+                if (token) {
+                    token.setAttribute('data-active', '');
+                }
+            }
+        });
+
+    })();
+
+    /**
+     * Define previewers
+     */
+    new Previewer('color', function(code) {
+        var style = this.style;
+
+        style.backgroundColor = '';
+        style.backgroundColor = code;
+
+        return !!style.backgroundColor;
+    });
+
+    new Previewer('abslength', function(code) {
+        var style = this.style,
+            abs = code.replace(/^-/, '');
+
+        style.width = '';
+        style.width = abs;
+
+        var valid = !!style.width;
+
+        if (valid) {
+            var num = parseFloat(abs),
+                unit = (code.match(/[a-z]+$/i) || [])[0];
+
+            style.marginLeft = -num / 2 + unit;
+
+            style.display = 'block';
+            var width = this.offsetWidth;
+            style.display = '';
+
+            if (width > innerWidth || width < 9) {
+                valid = false;
+            } else {
+                var size = width < 20 ? 'small' : 'normal';
+                this.setAttribute('data-size', size);
+            }
+        }
+
+        return valid;
+    });
+
+    new Previewer('time', function(code) {
+        if (code === '0s') {
+            return false;
+        }
+
+        var num = parseFloat(code),
+            unit = (code.match(/[a-z]+$/i) || [])[0];
+
+        $$('animate', this).forEach(function(animation) {
+            animation.setAttribute('dur', 2 * num + unit);
+        });
+
+        return true;
+    });
+
+    new Previewer('angle', function(code) {
+        var num = parseFloat(code),
+            unit = (code.match(/[a-z]+$/i) || [])[0],
+            max, percentage;
+
+        switch (unit) {
+            case 'deg':
+                max = 360;
+                break;
+            case 'grad':
+                max = 400;
+                break;
+            case 'rad':
+                max = 2 * Math.PI;
+                break;
+            case 'turn':
+                max = 1;
+        }
+
+        percentage = 100 * num / max;
+        percentage %= 100;
+
+        this[(num < 0 ? 'set' : 'remove') + 'Attribute']('data-negative', '');
+
+        $('circle', this).setAttribute('stroke-dasharray', Math.abs(percentage) + ',500')
+
+        return true;
+    });
+
+    new Previewer('fontfamily', function(code) {
+        var style = this.style;
+
+        style.fontFamily = '';
+        style.fontFamily = code;
+
+        return !!style.fontFamily;
+    });
+
+    new Previewer('gradient', function(code) {
+        var inner = this.firstElementChild,
+            style = inner.style;
+
+        style.cssText = StyleFix.fix('background-image: ' + code);
+
+        return !!style.backgroundImage;
+    });
+
+    new Previewer('easing', function(code) {
+        code = ({
+            'linear': '0,0,1,1',
+            'ease': '.25,.1,.25,1',
+            'ease-in': '.42,0,1,1',
+            'ease-out': '0,0,.58,1',
+            'ease-in-out': '.42,0,.58,1'
+        })[code] || code;
+
+        var p = code.match(/-?\d*\.?\d+/g);
+
+        if (p.length === 4) {
+            p = p.map(function(p, i) {
+                return (i % 2 ? 1 - p : p) * 100;
+            });
+
+            $('path', this).setAttribute('d', 'M0,100 C' + p[0] + ',' + p[1] + ', ' + p[2] + ',' + p[3] + ', 100,0');
+
+            var lines = $$('line', this);
+
+            lines[0].setAttribute('x2', p[0]);
+            lines[0].setAttribute('y2', p[1]);
+            lines[1].setAttribute('x2', p[2]);
+            lines[1].setAttribute('y2', p[3]);
+
+            return true;
+        }
+
+        return false;
+    });
+
+    new Previewer('url', function(code) {
+        var href = code.replace(/^url\(('|")?|('|")?\)$/g, ''),
+            img = $('img', this),
+            that = this;
+
+        img.src = href;
+
+        var regex = /data:|\.(gif|jpg|jpeg|tiff|png|svg|bmp)$/i;
+
+        if (!regex.test(img.src)) {
+            img.className = 'error';
+        }
+
+        img.onload = function() {
+            if (regex.test(this.src)) {
+                this.className = '';
+            } else {
+                this.className = 'error';
+            }
+
+            that.style.marginLeft = '-' + this.offsetWidth / 2 + 'px';
+        };
+
+        img.onerror = function() {
+            this.onload();
+            this.className = 'error';
+        };
+
+        return true;
+    });
+
+    /*new Previewer('href', function(code) {
+        var href = code.replace(/^url\(('|")?|('|")?\)$/g, ''),
+                img = $('img', this),
+                that = this;
+
+        img.src = href;
+
+        var regex = /data:|\.(gif|jpg|jpeg|tiff|png|svg|bmp)$/i;
+
+        if (!regex.test(img.src)) {
+            img.className = 'error';
+        }
+
+        img.onload = function() {
+            if (regex.test(this.src)) {
+                this.className = '';
+            } else {
+                this.className = 'error';
+            }
+
+            that.style.marginLeft = '-' + this.offsetWidth / 2 + 'px';
+        };
+
+        img.onerror = function() {
+            this.onload();
+            this.className = 'error';
+        };
+
+        return true;
+    });*/
+
+    new Previewer('entity', function(code) {
+        if (code.charAt(0) === '\\') {
+            this.textContent = String.fromCharCode(parseInt(code.slice(1), 16));
+        } else {
+            this.innerHTML = code;
+        }
+
+        return this.textContent.length === 1;
+    });
+
+    var pre = document.querySelector('.language-pretty');
+
+    pre.addEventListener('blur', function () {
+        Previewer && Previewer.hideAll;
+    });
+
+    pre.addEventListener('click', function (e) {
+        if (!Previewer) {
+            return;
+        }
+
+        var target = e.target,
+            type = Previewer.get(target);
+        
+        if (target.nodeName == 'A') {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            window.open(target.textContent);
+            return;
+        }
+
+        if (type == 'url') {
+            var code = target.textContent;
+            var href = code.replace(/^url\(('|")?|('|")?\)$/g, '');
+
+            window.open(href);
+        }
+    });
+
+    pre.addEventListener('mouseover', function (evt) {
+        if (!Previewer) {
+            return;
+        }
+
+        var target = evt.target,
+            type = Previewer.get(target);
+
+        if (type) {
+
+            var previewer = Previewer.s[type];
+
+            if (previewer.token != target) {
+                previewer.token = target;
+
+                target.onmouseout = function() {
+                    previewer.token = this.onmouseout = null;
+
+                    // Show the previewer again on the active token
+                    var active = Previewer.active;
+
+                    if (active) {
+                        var type = Previewer.get(active);
+                        Previewer.s[type].token = active;
+                    }
+                }
+            }
+        }
+    });
+
+    $$('.attr-name').forEach(function (item) {
+        var name = item.textContent;
+
+        if (name == 'href' || name == 'src') {
+            var node = item.nextElementSibling;
+            var childNodes = node.childNodes;
+
+            var textNodes = [], url = '';
+
+            [].slice.call(childNodes).forEach(function (n) {
+                if (n.nodeType == 3) {
+                    textNodes.push(n);
+                    url += n.textContent;
+                }
+            });
+
+            var anchor = document.createElement('a');
+
+            anchor.className = 'token href';
+            anchor.href = url;
+            anchor.textContent = url;
+            anchor.target = '_blank';
+
+            node.insertBefore(anchor, textNodes[0]);
+
+            textNodes.forEach(function (n) {
+                node.removeChild(n);
+            });
+        }
+    });
+})();
+</script>
+</div>
