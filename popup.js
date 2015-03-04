@@ -56,8 +56,9 @@ function updateView() {
 
     form.html(template.render(options));
 
-    $('[data-toggle="switch"]').bootstrapSwitch();
     $('[data-toggle="radio"]').radiocheck();
+    $('[data-toggle="checkbox"]').radiocheck();
+    $('[data-toggle="switch"]').bootstrapSwitch();
 }
 
 function tplEngine(str) {

@@ -68,6 +68,24 @@
         </div>
 
         <div class="option">
+            <label class="format-type">{{= it.lang ? '处理类型' : 'Format Type' }}</label>
+            <div class="radio-wrap">
+                <label class="checkbox {{= it.enabled ? '' : 'disabled'}}"">
+                    <input type="checkbox" name="formatType" value="HTML" data-toggle="checkbox" {{= it.enabled ? '' : 'disabled'}}>HTML
+                </label>
+                <label class="checkbox {{= it.enabled ? '' : 'disabled'}}"">
+                    <input type="checkbox" name="formatType" value="JS" data-toggle="checkbox" {{= it.enabled ? '' : 'disabled'}}>JS
+                </label>
+                <label class="checkbox {{= it.enabled ? '' : 'disabled'}}"">
+                    <input type="checkbox" name="formatType" value="CSS" data-toggle="checkbox" {{= it.enabled ? '' : 'disabled'}}>CSS
+                </label>
+                <label class="checkbox {{= it.enabled ? '' : 'disabled'}}"">
+                    <input type="checkbox" name="formatType" value="Markdown" data-toggle="checkbox" {{= it.enabled ? '' : 'disabled'}}>Markdown
+                </label>
+            </div>
+        </div>
+
+        <div class="option">
             <label for="custom-css">{{= it.lang ? '自定义CSS' : 'Custom CSS' }}</label>
             <textarea id="custom-css" placeholder="{{= it.lang ? '例如' : 'e.g.' }} pre { background: cornsilk !important; }" name="customCSS" class="form-control" name="css" {{= it.enabled ? '' : 'disabled'}}>{{= it.customCSS }}</textarea>
         </div>
