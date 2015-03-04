@@ -24,7 +24,7 @@ html {
 .container {
     position: relative;
     width: 320px;
-    height: 516px;
+    min-height: 590px;
     box-sizing: border-box;
 }
 
@@ -101,6 +101,10 @@ textarea {
         width: 70px;
     }
 
+    .format-type {
+        margin-bottom: 0;
+    }
+
     .radio-wrap {
         display: inline-block;
     }
@@ -113,6 +117,17 @@ textarea {
 
     .radio .icons:before {
         content: none !important;
+    }
+
+    .checkbox {
+        display: inline-block;
+        margin-left: 8px;
+        padding-left: 25px;
+        cursor: pointer;
+
+        &:first-child {
+            margin-left: 0;
+        }
     }
 
     .disabled {

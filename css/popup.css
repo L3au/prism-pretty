@@ -8,7 +8,7 @@ html {
 .container {
   position: relative;
   width: 320px;
-  height: 516px;
+  min-height: 590px;
   box-sizing: border-box;
 }
 h1 {
@@ -71,6 +71,9 @@ textarea {
 .options-form .option-label {
   width: 70px;
 }
+.options-form .format-type {
+  margin-bottom: 0;
+}
 .options-form .radio-wrap {
   display: inline-block;
 }
@@ -81,6 +84,15 @@ textarea {
 }
 .options-form .radio .icons:before {
   content: none !important;
+}
+.options-form .checkbox {
+  display: inline-block;
+  margin-left: 8px;
+  padding-left: 25px;
+  cursor: pointer;
+}
+.options-form .checkbox:first-child {
+  margin-left: 0;
 }
 .options-form .disabled {
   pointer-events: none;
