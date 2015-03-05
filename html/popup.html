@@ -68,19 +68,22 @@
         </div>
 
         <div class="option">
-            <label class="format-type">{{= it.lang ? '处理类型' : 'Format Type' }}</label>
+            <label class="format-types">{{= it.lang ? '处理类型' : 'Format Types' }}</label>
             <div class="radio-wrap">
                 <label class="checkbox {{= it.enabled ? '' : 'disabled'}}"">
-                    <input type="checkbox" name="formatType" value="HTML" data-toggle="checkbox" {{= it.enabled ? '' : 'disabled'}}>HTML
+                    <input type="checkbox" name="formatTypes[]" value="HTML" data-toggle="checkbox" {{= ~it.formatTypes.indexOf('HTML') ? 'checked' : ''}} {{= it.enabled ? '' : 'disabled'}}>HTML
+                    <span class="fui-alert-circle format-type-tip">
+                        <span class="option-tip-content">{{= it.lang ? '添加到右键' : 'Add item to context menus'}}</span>
+                    </span>
                 </label>
                 <label class="checkbox {{= it.enabled ? '' : 'disabled'}}"">
-                    <input type="checkbox" name="formatType" value="JS" data-toggle="checkbox" {{= it.enabled ? '' : 'disabled'}}>JS
+                    <input type="checkbox" name="formatTypes[]" value="JS" data-toggle="checkbox" {{= ~it.formatTypes.indexOf('JS') ? 'checked' : ''}}  {{= it.enabled ? '' : 'disabled'}}>JS
                 </label>
                 <label class="checkbox {{= it.enabled ? '' : 'disabled'}}"">
-                    <input type="checkbox" name="formatType" value="CSS" data-toggle="checkbox" {{= it.enabled ? '' : 'disabled'}}>CSS
+                    <input type="checkbox" name="formatTypes[]" value="CSS" data-toggle="checkbox" {{= ~it.formatTypes.indexOf('CSS') ? 'checked' : ''}}  {{= it.enabled ? '' : 'disabled'}}>CSS
                 </label>
                 <label class="checkbox {{= it.enabled ? '' : 'disabled'}}"">
-                    <input type="checkbox" name="formatType" value="Markdown" data-toggle="checkbox" {{= it.enabled ? '' : 'disabled'}}>Markdown
+                    <input type="checkbox" name="formatTypes[]" value="Markdown" data-toggle="checkbox" {{= ~it.formatTypes.indexOf('Markdown') ? 'checked' : ''}}  {{= it.enabled ? '' : 'disabled'}}>Markdown
                 </label>
             </div>
         </div>

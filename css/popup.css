@@ -1,6 +1,17 @@
+@-webkit-keyframes previewer {
+  from {
+    -webkit-transform: scale(0.5);
+    transform: scale(0.5);
+  }
+  to {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
 html {
   opacity: 0;
-  transition: transform 0.3s ease-out, opacity 0.1s linear;
+  transition: opacity .2s ease;
+  will-change: opacity;
 }
 .popup-show {
   opacity: 1;
@@ -8,7 +19,7 @@ html {
 .container {
   position: relative;
   width: 320px;
-  min-height: 590px;
+  min-height: 588px;
   box-sizing: border-box;
 }
 h1 {
@@ -68,11 +79,58 @@ textarea {
 .options-form .option [class^=fui]:hover {
   opacity: 1;
 }
+.options-form .option .option-tip-content {
+  position: absolute;
+  left: -10px;
+  top: 22px;
+  z-index: 1;
+  padding: .2em .5em;
+  font-size: 12px;
+  line-height: 1.4;
+  border-radius: 3px;
+  background: #16a085;
+  color: #fff;
+  word-break: break-all;
+  white-space: nowrap;
+  visibility: hidden;
+}
+.options-form .option .option-tip-content:after {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: -10px;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  border: 5px solid transparent;
+  border-bottom-color: #16a085;
+}
+.options-form .option .format-type-tip {
+  position: relative;
+  width: 10px;
+  height: 12px;
+  font-size: 10px;
+  vertical-align: 1px;
+  opacity: .6;
+}
+.options-form .option .format-type-tip:hover {
+  opacity: 1;
+}
+.options-form .option .format-type-tip:hover > .option-tip-content {
+  -webkit-transform-origin: 10px 0;
+  -webkit-animation: previewer .2s;
+  -webkit-animation-timing-function: cubic-bezier(0.5, 0, 0.7, 1.8);
+  transform-origin: 10px 0;
+  visibility: visible;
+}
 .options-form .option-label {
   width: 70px;
 }
-.options-form .format-type {
+.options-form .format-types {
   margin-bottom: 0;
+}
+.options-form .format-types + .radio-wrap {
+  margin-top: -5px;
 }
 .options-form .radio-wrap {
   display: inline-block;
@@ -87,7 +145,7 @@ textarea {
 }
 .options-form .checkbox {
   display: inline-block;
-  margin-left: 8px;
+  margin-left: 4px;
   padding-left: 25px;
   cursor: pointer;
 }
