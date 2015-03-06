@@ -2,6 +2,14 @@
  * Prism Pretty theme
  * @author Leshu
  */
+/* latin */
+@font-face {
+  font-family: 'Droid Sans Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Droid Sans Mono'), local('DroidSansMono'), url(http://fontstatic.useso.com/s/droidsansmono/v7/ns-m2xQYezAtqh7ai59hJVlgUn8GogvcKKzoM9Dh-4E.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
 html.prism-pretty {
   /**
      * Cute little value previewers
@@ -38,6 +46,18 @@ html.prism-pretty body {
 }
 html.prism-pretty .pretty-container {
   min-height: 100%;
+}
+html.prism-pretty .pretty-size-13px {
+  font-size: 13px;
+  background-size: 32px 32px;
+}
+html.prism-pretty .pretty-size-14px {
+  font-size: 14px;
+  background-size: 34px 34px;
+}
+html.prism-pretty .pretty-size-15px {
+  font-size: 15px;
+  background-size: 36px 36px;
 }
 html.prism-pretty .pretty-theme-dabblet {
   color: black;
@@ -244,17 +264,591 @@ html.prism-pretty .pretty-theme-coy .token.cr:before,
 html.prism-pretty .pretty-theme-coy .token.lf:before {
   color: #e0d7d1;
 }
-html.prism-pretty .pretty-size-13px {
-  font-size: 13px;
-  background-size: 32px 32px;
+html.prism-pretty .pretty-theme-markdown {
+  color: #2c3f51;
+  font-size: 16px;
+  line-height: 1.45;
+  word-wrap: break-word;
+  background-color: #fdfdfd;
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
-html.prism-pretty .pretty-size-14px {
-  font-size: 14px;
-  background-size: 34px 34px;
+html.prism-pretty .pretty-theme-markdown > .language-pretty {
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
 }
-html.prism-pretty .pretty-size-15px {
+html.prism-pretty .pretty-theme-markdown > .language-pretty a {
+  color: #1980e6;
+  text-decoration: none;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty a:active,
+html.prism-pretty .pretty-theme-markdown > .language-pretty a:hover {
+  outline: 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty a:hover,
+html.prism-pretty .pretty-theme-markdown > .language-pretty a:focus {
+  color: #0f4d8a;
+  text-decoration: underline;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty a:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty img {
+  max-width: 100%;
+  border: 0;
+  vertical-align: middle;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty abbr[title] {
+  border-bottom: 1px dotted;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty b,
+html.prism-pretty .pretty-theme-markdown > .language-pretty strong {
+  font-weight: bold;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty dfn {
+  font-style: italic;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+  margin-top: 21px;
+  margin-bottom: 21px;
+  border: 0;
+  border-top: 1px solid rgba(102, 128, 153, 0.1);
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty mark {
+  background: #ff0;
+  color: #000000;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty code,
+html.prism-pretty .pretty-theme-markdown > .language-pretty kbd,
+html.prism-pretty .pretty-theme-markdown > .language-pretty pre,
+html.prism-pretty .pretty-theme-markdown > .language-pretty samp {
+  font-family: monospace, serif;
+  font-size: 1em;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty pre {
+  white-space: pre-wrap;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty q {
+  quotes: "\201C" "\201D" "\2018" "\2019";
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty small {
+  font-size: 80%;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty sub,
+html.prism-pretty .pretty-theme-markdown > .language-pretty sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty sup {
+  top: -0.5em;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty sub {
+  bottom: -0.25em;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty img {
+  border: 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty svg:not(:root) {
+  overflow: hidden;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty figure {
+  margin: 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty legend {
+  border: 0;
+  padding: 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty button,
+html.prism-pretty .pretty-theme-markdown > .language-pretty input,
+html.prism-pretty .pretty-theme-markdown > .language-pretty select,
+html.prism-pretty .pretty-theme-markdown > .language-pretty textarea {
+  font-family: inherit;
+  font-size: 100%;
+  margin: 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty button,
+html.prism-pretty .pretty-theme-markdown > .language-pretty input {
+  line-height: normal;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty button,
+html.prism-pretty .pretty-theme-markdown > .language-pretty select {
+  text-transform: none;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty button,
+html.prism-pretty .pretty-theme-markdown > .language-pretty html input[type="button"],
+html.prism-pretty .pretty-theme-markdown > .language-pretty input[type="reset"],
+html.prism-pretty .pretty-theme-markdown > .language-pretty input[type="submit"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty button[disabled],
+html.prism-pretty .pretty-theme-markdown > .language-pretty html input[disabled] {
+  cursor: default;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty input[type="checkbox"],
+html.prism-pretty .pretty-theme-markdown > .language-pretty input[type="radio"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty input[type="search"] {
+  -webkit-appearance: textfield;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty input[type="search"]::-webkit-search-cancel-button,
+html.prism-pretty .pretty-theme-markdown > .language-pretty input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty button::-moz-focus-inner,
+html.prism-pretty .pretty-theme-markdown > .language-pretty input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty textarea {
+  overflow: auto;
+  vertical-align: top;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h1,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h2,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h3,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h4,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h5,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h6,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h1,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h2,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h3,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h4,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h5,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h6 {
+  font-family: inherit;
+  line-height: 1.1;
+  color: inherit;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h1 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h2 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h3 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h4 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h5 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h6 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h1 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h2 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h3 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h4 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h5 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h6 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h1 .small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h2 .small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h3 .small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h4 .small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h5 .small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h6 .small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h1 .small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h2 .small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h3 .small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h4 .small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h5 .small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h6 .small {
+  font-weight: normal;
+  line-height: 1;
+  color: #999999;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h1,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h2 {
+  margin-top: 21px;
+  margin-bottom: 10.5px;
+  padding-bottom: .3em;
+  border-bottom: 1px solid #eee;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h1 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h2 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h3 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h1 .small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h2 .small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h3 .small {
+  font-size: 65%;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h4,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h5,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h6 {
+  margin-top: 10.5px;
+  margin-bottom: 10.5px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h4 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h5 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h6 small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h4 .small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h5 .small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h6 .small {
+  font-size: 75%;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h1,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h1 {
+  font-size: 39px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h2,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h2 {
+  font-size: 32px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h3,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h3 {
+  font-size: 26px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h4,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h4 {
+  font-size: 19px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h5,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h5 {
   font-size: 15px;
-  background-size: 36px 36px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h6,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .h6 {
+  font-size: 13px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h1,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h2,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h3,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h4,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h5,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h6 {
+  font-weight: bold;
+  margin: 1.2em 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty p {
+  margin: 0 0 10.5px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty dt,
+html.prism-pretty .pretty-theme-markdown > .language-pretty dd {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty dd {
+  margin-left: 40px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty table {
+  margin-bottom: 20px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty table th,
+html.prism-pretty .pretty-theme-markdown > .language-pretty table td {
+  padding: 8px;
+  line-height: 20px;
+  vertical-align: top;
+  border-top: 1px solid #dddddd;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty table th {
+  font-weight: bold;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty table thead th {
+  vertical-align: bottom;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty table caption + thead tr:first-child th,
+html.prism-pretty .pretty-theme-markdown > .language-pretty table caption + thead tr:first-child td,
+html.prism-pretty .pretty-theme-markdown > .language-pretty table colgroup + thead tr:first-child th,
+html.prism-pretty .pretty-theme-markdown > .language-pretty table colgroup + thead tr:first-child td,
+html.prism-pretty .pretty-theme-markdown > .language-pretty table thead:first-child tr:first-child th,
+html.prism-pretty .pretty-theme-markdown > .language-pretty table thead:first-child tr:first-child td {
+  border-top: 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty table tbody + tbody {
+  border-top: 2px solid #dddddd;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote {
+  border-left-width: 10px;
+  background-color: rgba(102, 128, 153, 0.05);
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 15px 20px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote p {
+  margin-bottom: 1.1em;
+  font-size: 1em;
+  line-height: 1.45;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote ul:last-child,
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote ol:last-child {
+  margin-bottom: 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty ul,
+html.prism-pretty .pretty-theme-markdown > .language-pretty ol {
+  margin-top: 0;
+  margin-bottom: 10.5px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty ul ul,
+html.prism-pretty .pretty-theme-markdown > .language-pretty ol ul,
+html.prism-pretty .pretty-theme-markdown > .language-pretty ul ol,
+html.prism-pretty .pretty-theme-markdown > .language-pretty ol ol {
+  margin-bottom: 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty kbd {
+  padding: .1em .6em;
+  border: 1px solid rgba(44, 63, 81, 0.25);
+  -webkit-box-shadow: 0 1px 0 rgba(44, 63, 81, 0.25);
+  box-shadow: 0 1px 0 rgba(44, 63, 81, 0.25);
+  font-size: .7em;
+  font-family: sans-serif;
+  background-color: #fff;
+  color: #333;
+  border-radius: 3px;
+  display: inline-block;
+  margin: 0 .1em;
+  white-space: nowrap;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty table th,
+html.prism-pretty .pretty-theme-markdown > .language-pretty table td,
+html.prism-pretty .pretty-theme-markdown > .language-pretty table thead:first-child tr:first-child th {
+  padding: .5em;
+  border: 1px solid #ddd;
+  line-height: 1.5;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote {
+  padding: 10.5px 21px;
+  margin: 0 0 21px;
+  border-left: 5px solid rgba(102, 128, 153, 0.075);
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote p {
+  font-size: 18.75px;
+  font-weight: 300;
+  line-height: 1.25;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote p:last-child {
+  margin-bottom: 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote .small {
+  display: block;
+  line-height: 1.45;
+  color: #999999;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote small:before,
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote .small:before {
+  content: '\2014 \00A0';
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote.pull-right {
+  padding-right: 15px;
+  padding-left: 0;
+  border-right: 5px solid rgba(102, 128, 153, 0.075);
+  border-left: 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote.pull-right p,
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote.pull-right small,
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote.pull-right .small {
+  text-align: right;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote.pull-right small:before,
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote.pull-right .small:before {
+  content: '';
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote.pull-right small:after,
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote.pull-right .small:after {
+  content: '\00A0 \2014';
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote:before,
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote:after {
+  content: "";
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty address {
+  margin-bottom: 21px;
+  font-style: normal;
+  line-height: 1.45;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty p,
+html.prism-pretty .pretty-theme-markdown > .language-pretty pre,
+html.prism-pretty .pretty-theme-markdown > .language-pretty pre.prettyprint,
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote {
+  margin: 0 0 1.1em;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty hr {
+  margin: 2em 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty img {
+  max-width: 100%;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .sequence-diagram,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .flow-chart {
+  text-align: center;
+  margin-bottom: 1.1em;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .sequence-diagram text,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .flow-chart text {
+  font-size: 15px !important;
+  font-family: "Helvetica Neue", Arial, "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "WenQuanYi Micro Hei", SimSun, Song, sans-serif !important;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .sequence-diagram [fill="#ffffff"],
+html.prism-pretty .pretty-theme-markdown > .language-pretty .flow-chart [fill="#ffffff"] {
+  fill: none;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .sequence-diagram [stroke="#000000"],
+html.prism-pretty .pretty-theme-markdown > .language-pretty .flow-chart [stroke="#000000"] {
+  stroke: #2c3f51;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .sequence-diagram text[stroke="#000000"],
+html.prism-pretty .pretty-theme-markdown > .language-pretty .flow-chart text[stroke="#000000"] {
+  stroke: none;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .sequence-diagram [fill="#000"],
+html.prism-pretty .pretty-theme-markdown > .language-pretty .flow-chart [fill="#000"],
+html.prism-pretty .pretty-theme-markdown > .language-pretty .sequence-diagram [fill="#000000"],
+html.prism-pretty .pretty-theme-markdown > .language-pretty .flow-chart [fill="#000000"],
+html.prism-pretty .pretty-theme-markdown > .language-pretty .sequence-diagram [fill="black"],
+html.prism-pretty .pretty-theme-markdown > .language-pretty .flow-chart [fill="black"] {
+  fill: #2c3f51;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs,
+html.prism-pretty .pretty-theme-markdown > .language-pretty pre > code {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #23241f;
+  -webkit-text-size-adjust: none;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs,
+html.prism-pretty .pretty-theme-markdown > .language-pretty pre > code,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-tag,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .css .hljs-rules,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .css .hljs-value,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .aspectj .hljs-function,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .css .hljs-function .hljs-preprocessor,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-pragma {
+  color: #f8f8f2;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-strongemphasis,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-strong,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-emphasis {
+  color: #a8a8a2;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-bullet,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-blockquote,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-horizontal_rule,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-number,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-regexp,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .alias .hljs-keyword,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-literal,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-hexcolor {
+  color: #ae81ff;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-tag .hljs-value,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-code,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-title,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .css .hljs-class,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-class .hljs-title:last-child {
+  color: #a6e22e;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-link_url {
+  font-size: 80%;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-strong,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-strongemphasis {
+  font-weight: bold;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-emphasis,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-strongemphasis,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-class .hljs-title:last-child,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-typename {
+  font-style: italic;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-keyword,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .ruby .hljs-class .hljs-keyword:first-child,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .ruby .hljs-function .hljs-keyword,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-function,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-change,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-winutils,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-flow,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .nginx .hljs-title,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .tex .hljs-special,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-header,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-attribute,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-symbol,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-symbol .hljs-string,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-tag .hljs-title,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-value,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .alias .hljs-keyword:first-child,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .css .hljs-tag,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .css .unit,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .css .hljs-important {
+  color: #f92672;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-function .hljs-keyword,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-class .hljs-keyword:first-child,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-aspect .hljs-keyword:first-child,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-constant,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-typename,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .css .hljs-attribute {
+  color: #66d9ef;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-variable,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-params,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-class .hljs-title,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-aspect .hljs-title {
+  color: #f8f8f2;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-string,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .css .hljs-id,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-subst,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-type,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .ruby .hljs-class .hljs-parent,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-built_in,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .django .hljs-template_tag,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .django .hljs-variable,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .smalltalk .hljs-class,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .django .hljs-filter .hljs-argument,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .smalltalk .hljs-localvars,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .smalltalk .hljs-array,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-attr_selector,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-pseudo,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-addition,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-stream,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-envvar,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .apache .hljs-tag,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .apache .hljs-cbracket,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .tex .hljs-command,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-prompt,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-link_label,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-link_url {
+  color: #e6db74;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-comment,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-javadoc,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-annotation,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-decorator,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-pi,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-doctype,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-deletion,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-shebang,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .apache .hljs-sqbracket,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .tex .hljs-formula {
+  color: #75715e;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty .coffeescript .javascript,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .javascript .xml,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .tex .hljs-formula,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .xml .javascript,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .xml .vbscript,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .xml .css,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .xml .hljs-cdata,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .xml .php,
+html.prism-pretty .pretty-theme-markdown > .language-pretty .php .xml {
+  opacity: 0.5;
 }
 html.prism-pretty .request-headers {
   position: fixed;
@@ -271,9 +865,19 @@ html.prism-pretty .request-headers {
   line-height: 1.8;
   color: inherit;
 }
+html.prism-pretty .request-headers > tbody {
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: 0.5s ease-out;
+  transition: 0.5s ease-out;
+}
 html.prism-pretty .request-headers:hover {
   opacity: 1 !important;
   -webkit-user-select: auto;
+}
+html.prism-pretty .request-headers:hover > tbody {
+  opacity: 1;
+  visibility: visible;
 }
 html.prism-pretty .request-headers tr > td {
   vertical-align: top;
@@ -300,7 +904,7 @@ html.prism-pretty .token.href {
 }
 html.prism-pretty code[class*="language-"],
 html.prism-pretty pre[class*="language-"] {
-  font-family: Monaco, Menlo, 'Andale Mono', monospace;
+  font-family: Monaco, 'Droid Sans Mono', 'Andale Mono', monospace;
   direction: ltr;
   text-align: left;
   white-space: pre;

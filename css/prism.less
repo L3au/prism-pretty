@@ -2,6 +2,16 @@
  * Prism Pretty theme
  * @author Leshu
  */
+
+/* latin */
+@font-face {
+    font-family: 'Droid Sans Mono';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Droid Sans Mono'), local('DroidSansMono'), url(http://fontstatic.useso.com/s/droidsansmono/v7/ns-m2xQYezAtqh7ai59hJVlgUn8GogvcKKzoM9Dh-4E.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
 html.prism-pretty {
     &:before {
         content: '';
@@ -39,6 +49,19 @@ html.prism-pretty {
         min-height: 100%;
     }
 
+    .pretty-size-13px {
+        font-size: 13px;
+        background-size: 32px 32px;
+    }
+    .pretty-size-14px {
+        font-size: 14px;
+        background-size: 34px 34px;
+    }
+    .pretty-size-15px {
+        font-size: 15px;
+        background-size: 36px 36px;
+    }
+
     .pretty-theme-dabblet {
         color: black;
         // text-shadow: 0 1px white;
@@ -66,7 +89,7 @@ html.prism-pretty {
         color: black;
         // text-shadow: 0 1px white;
         background-color: #fdfdfd;
-        // gradient这玩意真耗内存啊= =，老实用图片吧
+        // gradient这玩意真耗内存啊= =，还是老实用图片吧
         // background-image: linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
         background-image: data-uri('../img/coy.png');
         background-size: 40px 40px;
@@ -80,17 +103,20 @@ html.prism-pretty {
         @import "coy";
     }
 
-    .pretty-size-13px {
-        font-size: 13px;
-        background-size: 32px 32px;
-    }
-    .pretty-size-14px {
-        font-size: 14px;
-        background-size: 34px 34px;
-    }
-    .pretty-size-15px {
-        font-size: 15px;
-        background-size: 36px 36px;
+    .pretty-theme-markdown {
+        color: #2c3f51;
+        font-size: 16px;
+        line-height: 1.45;
+        word-wrap: break-word;
+        background-color: #fdfdfd;
+        font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+
+        > .language-pretty {
+            width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+            @import "markdown";
+        }
     }
 
     .request-headers {
@@ -108,9 +134,21 @@ html.prism-pretty {
         line-height: 1.8;
         color: inherit;
 
+        > tbody {
+            opacity: 0;
+            visibility: hidden;
+            -webkit-transition: 0.5s ease-out;
+            transition: 0.5s ease-out;
+        }
+
         &:hover {
             opacity: 1 !important;
             -webkit-user-select: auto;
+
+            & > tbody {
+                opacity: 1;
+                visibility: visible;
+            }
         }
 
         tr {
@@ -145,7 +183,7 @@ html.prism-pretty {
     }
 
     code[class*="language-"], pre[class*="language-"] {
-        font-family: Monaco, Menlo, 'Andale Mono', monospace;
+        font-family: Monaco, 'Droid Sans Mono', 'Andale Mono', monospace;
         direction: ltr;
         text-align: left;
         white-space: pre;
