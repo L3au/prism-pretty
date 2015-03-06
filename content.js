@@ -54,16 +54,10 @@
                         chrome.runtime.sendMessage({
                             action: 'requestHeader'
                         }, function (result) {
-                            if (result.type) {
-                                loading();
-                            }
-
-                            resolve(result);
-
                             if (result.error) {
                                 reject();
                             } else {
-
+                                resolve(result);
                             }
                         });
                     });
@@ -84,15 +78,13 @@
                 if (options.enabled) {
                     Promise.all(promises.map(function (p) {
                         return p();
-                    })).then(function () {
+                    })).then(function (result) {
                         rootEl = document.documentElement;
 
-                        global_headers = arguments[0][0];
+                        global_headers = result[0];
                         global_options = options;
 
                         self.prettifyContent();
-                    }, function () {
-                        unloading();
                     });
                 }
             });
@@ -112,16 +104,19 @@
                         return;
                     }
 
-                    loading();
-
-                    self.sendPrettyMsg('markup');
+                    self.sendPrettyMsg('html');
                 }
             });
         },
 
         prettifyContent: function () {
-            var content;
             var body = document.body;
+
+            if (!body) {
+                return;
+            }
+
+            var content;
             var children = body.children;
             var pre = children[0];
 
@@ -134,7 +129,6 @@
             }
 
             if (!content) {
-                unloading();
                 return;
             }
 
@@ -172,11 +166,20 @@
             }
 
             if (!type) {
-                unloading();
                 return;
             }
 
-            loading();
+            var tmpType = type;
+            var types = global_options.formatTypes;
+
+            if (tmpType == 'json' || tmpType == 'jsonp') {
+                tmpType = 'js';
+            }
+
+            // if type format is enabled
+            if (!~types.indexOf(tmpType)) {
+                return;
+            }
 
             if (type == 'json' || type == 'jsonp') {
                 var script = 'var json = ';
@@ -192,6 +195,9 @@
                 script += ';console.log("%cvar json = ", "color:teal", json);';
 
                 execScript(script);
+
+                // alias to js
+                type = 'js';
             }
 
             this.sendPrettyMsg(type);
@@ -200,6 +206,8 @@
         sendPrettyMsg: function (type) {
             var options = global_options;
             var headers = global_headers || {headers: []};
+
+            loading();
 
             if (!options) {
                 unloading();
@@ -222,7 +230,9 @@
                 rootEl.innerHTML = '<head></head><body>' + responseHtml + '</body>';
                 rootEl.className = 'prism-pretty';
 
-                document.title = 'Prism Pretty: ' + title;
+                if (title) {
+                    document.title = 'Prism Pretty: ' + title;
+                }
 
                 var headerEl = $('.request-headers');
 
