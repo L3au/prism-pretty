@@ -26,6 +26,12 @@ importScripts.apply(null, assets.map(function (item) {
     return '../js/' + item;
 }));
 
+marked.setOptions({
+    highlight: function (code) {
+        return hljs.highlightAuto(code).value;
+    }
+});
+
 var onmessage = function (event) {
     var data = event.data;
     var type = data.type;
@@ -43,10 +49,7 @@ var onmessage = function (event) {
     var headers = options.headers;
     var customCSS = options.customCSS.trim();
 
-    var formated, beautified = '';
-    var language;
-
-    var files = new Array(4);
+    var files = new Array(5);
 
     files[0] = url;
 
@@ -54,12 +57,16 @@ var onmessage = function (event) {
         files[1] = 'html/header.html';
     }
 
-    if (type == 'css' || type == 'markup') {
+    if (type == 'css' || type == 'html') {
         files[2] = 'html/preview.html';
     }
 
     if (bugFree) {
         files[3] = 'js/bugfree.js';
+    }
+
+    if (type == 'markdown') {
+        files[4] = 'html/markdown.html';
     }
 
     Promise.all(files.map(function (url) {
@@ -77,62 +84,97 @@ var onmessage = function (event) {
             xhr.send();
         });
     })).then(function (contents) {
+        var language, html;
+        var formated = beautified = lineRows = '';
+
         var content = contents[0];
+        var isMarkdown = type === 'markdown';
 
-        if (type == 'css') {
-            formated = css_beautify(content, {
-                indent_size: indent
-            });
+        try {
+            switch (type) {
+                case 'js':
+                    formated = js_beautify(content, {
+                        indent_size: indent
+                    });
 
-            language = Prism.languages.css;
-        } else if (type == 'markup')  {
-            formated = html_beautify(content, {
-                indent_size: indent,
-                max_preserve_newlines: 1
-            });
+                    language = Prism.languages.javascript;
 
-            language = Prism.languages.markup;
-        } else {
-            formated = js_beautify(content, {
-                indent_size: indent
-            });
+                    break;
 
-            language = Prism.languages.javascript;
+                case 'css':
+                    formated = css_beautify(content, {
+                        indent_size: indent
+                    });
+
+                    language = Prism.languages.css;
+
+                    break;
+
+                case 'html':
+                    formated = html_beautify(content, {
+                        indent_size: indent,
+                        max_preserve_newlines: 1
+                    });
+
+                    language = Prism.languages.markup;
+
+                    break;
+
+                case 'markdown':
+                    formated = hljs.highlight('md', content).value;
+                    beautified = marked(content);
+                    break;
+
+                default:
+                    postMessage();
+                    return;
+            }
+
+            if (bugFree && (type == 'js' || type == 'css')) {
+                var idx = +!lang.match('zh');
+
+                formated = contents[3].split('233')[idx] + '\r\n' + formated;
+            }
+
+            if (!isMarkdown) {
+                beautified = Prism.highlight(formated, language, isUnicode);
+            }
+        } catch(e) {
+            throw e;
+            postMessage();
+            return;
         }
 
-        if (bugFree && type != 'markup') {
-            var idx = +!lang.match('zh');
-
-            formated = contents[3].split('233')[idx] + '\r\n' + formated;
-        }
-
-        beautified = Prism.highlight(formated, language, isUnicode);
-
-        var lines = beautified.split('\n').length;
-        var lineRows = '<span class="line-numbers-rows">';
-
-        while (lines--) {
-            lineRows += '<span></span>';
-        }
-
-        lineRows += '</span>';
-
-        var html = '<div class="pretty-container {{= it.theme }} {{= it.fontSize }}">';
+        html = '<div class="pretty-container {{= it.theme }} {{= it.fontSize }}">';
 
         html = template(html).render({
-            theme: 'pretty-theme-' + theme,
-            fontSize: 'pretty-size-' + fontSize
+            fontSize: 'pretty-size-' + fontSize,
+            theme: 'pretty-theme-' + (isMarkdown ? 'markdown' : theme)
         });
 
-        html += '<pre class="language-pretty">' + lineRows + beautified + '</pre>';
+        if (type !== 'markdown') {
+            lineRows = '<span class="line-numbers-rows">';
 
-        if (headers) {
+            var lines = beautified.split('\n').length;
+
+            while (lines--) {
+                lineRows += '<span></span>';
+            }
+
+            lineRows += '</span>';
+        }
+
+        html += '<' + (isMarkdown ? 'div' : 'pre') +' class="language-pretty">';
+        html += lineRows + beautified;
+        html += '</' + (isMarkdown ? 'div' : 'pre') + '>';
+
+        if (headers && !isMarkdown) {
             html += template(contents[1]).render({
                 headers: headersData
             });
         }
 
-        if (type == 'css' || type == 'markup') {
+        if (type == 'css' || type == 'html') {
             html += contents[2];
         }
 
