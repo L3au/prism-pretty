@@ -1,11 +1,12 @@
-Prism Pretty
+<img src="icon/icon_48.png" alt="" style="width: 39px;vertical-align: -6px;margin-right: 10px;">Prism Pretty
 ===
-A Chrome Extension to format/highlight HTML/JS/CSS code with Prism.js
+A Chrome Extension to format/highlight/preview HTML/JS/CSS/Markdown code with Prism.js
 
 Install
 ---
 [Chrome Web Store](https://chrome.google.com/webstore/detail/prism-pretty/hjjcdjnncffbbhlglkipjhljmocnehim) or [Download](https://github.com/L3au/prism-pretty/tree/master/crx)
 
+<p><img src="http://gtms03.alicdn.com/tps/i3/TB153SkHpXXXXaTXpXXL6XB2VXX-652-1246.png_450x10000.jpg" alt="" style="width: 360px;"></p>
 
 Features
 ---
@@ -16,12 +17,17 @@ Features
 - Transform unicode to text
 - Custom CSS setting
 - Advanced css preview
-
-![](http://gtms02.alicdn.com/tps/i2/TB1o1mdHXXXXXaXXXXXuZhY3FXX-326-548.png)
+- Markdown file preview
 
 
 Change Log
 ---
+
+- v1.10.0
+  - add markdown preview
+  - add format types setting
+  - add Droid Sans Mono font
+  - fix some bugs
 
 - v1.0.8
   - fix json/jsonp parse
