@@ -77,10 +77,6 @@ var onmessage = function(event) {
         files[3] = 'js/bugfree.js';
     }
 
-    if (type == 'markdown') {
-        files[4] = 'html/markdown.html';
-    }
-
     Promise.all(files.map(function(url) {
         return new Promise(function(resolve, reject) {
             var xhr = new XMLHttpRequest();
