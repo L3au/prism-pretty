@@ -37,7 +37,7 @@ html.prism-pretty body {
   margin: 0;
 }
 html.prism-pretty .pretty-container {
-  min-height: 100%;
+  min-height: 100vh;
 }
 html.prism-pretty .pretty-size-13px {
   font-size: 13px;
@@ -896,24 +896,23 @@ html.prism-pretty pre[class*="language-"] {
 html.prism-pretty pre[class*="language-"] {
   position: relative;
   margin: 0;
-  overflow: auto;
   padding-left: 3.8em;
   white-space: pre;
   word-wrap: normal;
   counter-reset: linenumber;
-}
-html.prism-pretty pre[class*="language-"]:before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: .5em 0;
-  background: linear-gradient(#333333, #000000);
-  border-radius: 4px 4px 0 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  font: bold 15px/1 sans-serif;
-  color: white;
-  text-indent: 1em;
+  /*&:before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: .5em 0;
+            background: linear-gradient(#333333, #000000);
+            border-radius: 4px 4px 0 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            font: bold 15px/1 sans-serif;
+            color: white;
+            text-indent: 1em;
+        }*/
 }
 html.prism-pretty .line-numbers-rows {
   display: flex;
