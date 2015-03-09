@@ -1,4 +1,4 @@
-<img src="icon/icon_48.png" alt="" style="width: 39px;vertical-align: -6px;margin-right: 10px;">Prism Pretty
+![](img/logo.png)Prism Pretty
 ===
 A Chrome Extension to format/highlight/preview HTML/JS/CSS/Markdown code with Prism.js
 
@@ -6,7 +6,6 @@ Install
 ---
 [Chrome Web Store](https://chrome.google.com/webstore/detail/prism-pretty/hjjcdjnncffbbhlglkipjhljmocnehim) or [Download](https://github.com/L3au/prism-pretty/tree/master/crx)
 
-<p><img src="http://gtms03.alicdn.com/tps/i3/TB153SkHpXXXXaTXpXXL6XB2VXX-652-1246.png_450x10000.jpg" alt="" style="width: 360px;"></p>
 
 Features
 ---
@@ -18,6 +17,8 @@ Features
 - Custom CSS setting
 - Advanced css preview
 - Markdown file preview
+
+![](img/screenshot.png)
 
 
 Change Log
