@@ -1,9 +1,9 @@
 {
     "manifest_version": 2,
     "name": "Prism Pretty",
-    "version": "1.0.8",
+    "version": "1.10.0",
     "author": "L3au",
-    "description": "A Chrome Extension to format/highlight HTML/JS/CSS code with Prism.js",
+    "description": "A Chrome Extension to format/highlight/preview HTML/JS/CSS/Markdown code with Prism.js",
     "minimum_chrome_version": "31.0.1650.8",
     "permissions": ["tabs", "<all_urls>", "webRequest", "webRequestBlocking", "storage", "contextMenus"],
     "update_url": "http://clients2.google.com/service/update2/crx",
