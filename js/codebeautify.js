@@ -4003,10 +4003,10 @@
         }
 
         if (!lang) {
-            return '<pre><code>' + (escaped ? code : escape(code, true)) + '\n</code></pre>';
+            return '<pre class="hljs"><code>' + (escaped ? code : escape(code, true)) + '\n</code></pre>';
         }
 
-        return '<pre><code class="' + this.options.langPrefix + escape(lang, true) + '">' + (escaped ? code : escape(code, true)) + '\n</code></pre>\n';
+        return '<pre class="hljs"><code class="' + this.options.langPrefix + escape(lang, true) + '">' + (escaped ? code : escape(code, true)) + '\n</code></pre>\n';
     };
 
     Renderer.prototype.blockquote = function(quote) {
