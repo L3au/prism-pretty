@@ -178,8 +178,11 @@ h1,
 h2{
     margin-top: 21px;
     margin-bottom: 10.5px;
-    padding-bottom: .3em;
+    padding-bottom: 10px;
     border-bottom: 1px solid #eee;
+    > .anchor {
+        padding-bottom: 5px;
+    }
 }
 
 h1 small,
@@ -442,11 +445,19 @@ hr {
     height: 100%;
     align-items: center;
     margin-left: -20px;
-    font-weight: normal;
-    font-size: 16px;
     opacity: 0;
-    vertical-align: middle;
+    box-sizing: border-box;
     text-decoration: none !important;
+
+    > .anchor-link {
+        width: 16px;
+        height: 16px;
+        // margin-top: -5px;
+        background-size: 16px auto;
+        background-position: 0 center;
+        background-repeat: no-repeat;
+        background-image: data-uri('../img/link.png');
+    }
 }
 
 

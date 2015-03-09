@@ -33,7 +33,7 @@ renderer.heading = function(text, level) {
 
     return '<h' + level + '><a id="' + escapedText +
         '" class="anchor" href="#' + escapedText +
-        '"><span class="anchor-link">&#128279;</span></a>' +
+        '"><span class="anchor-link"></span></a>' +
         text + '</h' + level + '>';
 }
 
