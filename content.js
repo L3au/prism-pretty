@@ -109,6 +109,25 @@
             });
         },
 
+        loadFont: function () {
+            var style = document.createElement('style');
+            var srcUrl = chrome.runtime.getURL('css/droid-sans-mono.woff2');
+
+            var cssContent = (function(){/*
+                @font-face {
+                    font-family: 'Droid Sans Mono';
+                    font-style: normal;
+                    font-weight: 400;
+                    src: local('Droid Sans Mono'), local('DroidSansMono'), url('srcUrl') format('woff2');
+                    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+                }
+            */}).toString().slice(14, -4).replace('srcUrl', srcUrl);
+
+            style.textContent = cssContent;
+
+            document.head.appendChild(style);
+        },
+
         prettifyContent: function () {
             var body = document.body;
 
@@ -204,6 +223,7 @@
         },
 
         sendPrettyMsg: function (type) {
+            var self = this;
             var options = global_options;
             var headers = global_headers || {headers: []};
 
@@ -234,6 +254,9 @@
                     document.title = 'Prism Pretty: ' + title;
                 }
 
+                // load Droid Sans font
+                self.loadFont();
+
                 var headerEl = $('.request-headers');
 
                 if (headerEl) {
@@ -242,17 +265,32 @@
                     }, 3000);
                 }
 
-                var wrap = $('.preview-wrap');
+                if (type === 'markdown') {
+                    var hash = location.hash.slice(1);
+                    var anchors = $$('.anchor');
+                    var anchor;
 
-                if (!wrap) {
-                    return;
+                    anchors.some(function (a) {
+                        if (a.id == hash) {
+                            anchor = a;
+                            return true;
+                        }
+                    });
+
+                    if (anchor) {
+                        window.scrollTo(0, anchor.getBoundingClientRect().top - 10);
+                    }
                 }
 
-                var script = $('script', wrap);
+                var wrap;
 
-                if (script) {
-                    execScript(script.textContent);
-                    script.remove();
+                if (wrap = $('.preview-wrap')) {
+                    var script = $('script', wrap);
+
+                    if (script) {
+                        execScript(script.textContent);
+                        script.remove();
+                    }
                 }
             });
         }
