@@ -2,14 +2,6 @@
  * Prism Pretty theme
  * @author Leshu
  */
-/* latin */
-@font-face {
-  font-family: 'Droid Sans Mono';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Droid Sans Mono'), local('DroidSansMono'), url(http://fontstatic.useso.com/s/droidsansmono/v7/ns-m2xQYezAtqh7ai59hJVlgUn8GogvcKKzoM9Dh-4E.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
 html.prism-pretty {
   /**
      * Cute little value previewers
@@ -300,10 +292,6 @@ html.prism-pretty .pretty-theme-markdown > .language-pretty img {
   border: 0;
   vertical-align: middle;
 }
-html.prism-pretty .pretty-theme-markdown > .language-pretty h1 {
-  font-size: 2em;
-  margin: 0.67em 0;
-}
 html.prism-pretty .pretty-theme-markdown > .language-pretty abbr[title] {
   border-bottom: 1px dotted;
 }
@@ -315,24 +303,15 @@ html.prism-pretty .pretty-theme-markdown > .language-pretty dfn {
   font-style: italic;
 }
 html.prism-pretty .pretty-theme-markdown > .language-pretty hr {
-  -moz-box-sizing: content-box;
   box-sizing: content-box;
   height: 0;
-  margin-top: 21px;
-  margin-bottom: 21px;
+  margin: 0 20px;
   border: 0;
   border-top: 1px solid rgba(102, 128, 153, 0.1);
 }
 html.prism-pretty .pretty-theme-markdown > .language-pretty mark {
   background: #ff0;
-  color: #000000;
-}
-html.prism-pretty .pretty-theme-markdown > .language-pretty code,
-html.prism-pretty .pretty-theme-markdown > .language-pretty kbd,
-html.prism-pretty .pretty-theme-markdown > .language-pretty pre,
-html.prism-pretty .pretty-theme-markdown > .language-pretty samp {
-  font-family: monospace, serif;
-  font-size: 1em;
+  color: #000;
 }
 html.prism-pretty .pretty-theme-markdown > .language-pretty pre {
   white-space: pre-wrap;
@@ -355,9 +334,6 @@ html.prism-pretty .pretty-theme-markdown > .language-pretty sup {
 }
 html.prism-pretty .pretty-theme-markdown > .language-pretty sub {
   bottom: -0.25em;
-}
-html.prism-pretty .pretty-theme-markdown > .language-pretty img {
-  border: 0;
 }
 html.prism-pretty .pretty-theme-markdown > .language-pretty svg:not(:root) {
   overflow: hidden;
@@ -390,44 +366,13 @@ html.prism-pretty .pretty-theme-markdown > .language-pretty button,
 html.prism-pretty .pretty-theme-markdown > .language-pretty select {
   text-transform: none;
 }
-html.prism-pretty .pretty-theme-markdown > .language-pretty button,
-html.prism-pretty .pretty-theme-markdown > .language-pretty html input[type="button"],
-html.prism-pretty .pretty-theme-markdown > .language-pretty input[type="reset"],
-html.prism-pretty .pretty-theme-markdown > .language-pretty input[type="submit"] {
-  -webkit-appearance: button;
-  cursor: pointer;
-}
-html.prism-pretty .pretty-theme-markdown > .language-pretty button[disabled],
-html.prism-pretty .pretty-theme-markdown > .language-pretty html input[disabled] {
-  cursor: default;
-}
-html.prism-pretty .pretty-theme-markdown > .language-pretty input[type="checkbox"],
-html.prism-pretty .pretty-theme-markdown > .language-pretty input[type="radio"] {
-  box-sizing: border-box;
-  padding: 0;
-}
-html.prism-pretty .pretty-theme-markdown > .language-pretty input[type="search"] {
-  -webkit-appearance: textfield;
-  -moz-box-sizing: content-box;
-  -webkit-box-sizing: content-box;
-  box-sizing: content-box;
-}
-html.prism-pretty .pretty-theme-markdown > .language-pretty input[type="search"]::-webkit-search-cancel-button,
-html.prism-pretty .pretty-theme-markdown > .language-pretty input[type="search"]::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
-html.prism-pretty .pretty-theme-markdown > .language-pretty button::-moz-focus-inner,
-html.prism-pretty .pretty-theme-markdown > .language-pretty input::-moz-focus-inner {
-  border: 0;
-  padding: 0;
-}
-html.prism-pretty .pretty-theme-markdown > .language-pretty textarea {
-  overflow: auto;
-  vertical-align: top;
-}
 html.prism-pretty .pretty-theme-markdown > .language-pretty table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
 }
 html.prism-pretty .pretty-theme-markdown > .language-pretty h1,
 html.prism-pretty .pretty-theme-markdown > .language-pretty h2,
@@ -532,8 +477,18 @@ html.prism-pretty .pretty-theme-markdown > .language-pretty h3,
 html.prism-pretty .pretty-theme-markdown > .language-pretty h4,
 html.prism-pretty .pretty-theme-markdown > .language-pretty h5,
 html.prism-pretty .pretty-theme-markdown > .language-pretty h6 {
+  position: relative;
   font-weight: bold;
   margin: 1.2em 0;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty h1:hover > .anchor,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h2:hover > .anchor,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h3:hover > .anchor,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h4:hover > .anchor,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h5:hover > .anchor,
+html.prism-pretty .pretty-theme-markdown > .language-pretty h6:hover > .anchor {
+  opacity: 1;
+  text-decoration: none;
 }
 html.prism-pretty .pretty-theme-markdown > .language-pretty p {
   margin: 0 0 10.5px;
@@ -545,6 +500,13 @@ html.prism-pretty .pretty-theme-markdown > .language-pretty dd {
 }
 html.prism-pretty .pretty-theme-markdown > .language-pretty dd {
   margin-left: 40px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty code {
+  color: #c7254e;
+  background-color: #f9f2f4;
+  border-radius: 4px;
+  font-size: .9em;
+  padding: 2px 4px;
 }
 html.prism-pretty .pretty-theme-markdown > .language-pretty table {
   margin-bottom: 20px;
@@ -572,22 +534,6 @@ html.prism-pretty .pretty-theme-markdown > .language-pretty table thead:first-ch
 }
 html.prism-pretty .pretty-theme-markdown > .language-pretty table tbody + tbody {
   border-top: 2px solid #dddddd;
-}
-html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote {
-  border-left-width: 10px;
-  background-color: rgba(102, 128, 153, 0.05);
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  padding: 15px 20px;
-}
-html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote p {
-  margin-bottom: 1.1em;
-  font-size: 1em;
-  line-height: 1.45;
-}
-html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote ul:last-child,
-html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote ol:last-child {
-  margin-bottom: 0;
 }
 html.prism-pretty .pretty-theme-markdown > .language-pretty ul,
 html.prism-pretty .pretty-theme-markdown > .language-pretty ol {
@@ -678,11 +624,36 @@ html.prism-pretty .pretty-theme-markdown > .language-pretty pre.prettyprint,
 html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote {
   margin: 0 0 1.1em;
 }
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote {
+  border-left-width: 10px;
+  background-color: rgba(102, 128, 153, 0.05);
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 15px 20px;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote p {
+  margin-bottom: 1.1em;
+  font-size: 1em;
+  line-height: 1.45;
+}
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote ul:last-child,
+html.prism-pretty .pretty-theme-markdown > .language-pretty blockquote ol:last-child {
+  margin-bottom: 0;
+}
 html.prism-pretty .pretty-theme-markdown > .language-pretty hr {
   margin: 2em 0;
 }
-html.prism-pretty .pretty-theme-markdown > .language-pretty img {
-  max-width: 100%;
+html.prism-pretty .pretty-theme-markdown > .language-pretty .anchor {
+  position: absolute;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  margin-left: -20px;
+  font-weight: normal;
+  font-size: 16px;
+  opacity: 0;
+  vertical-align: middle;
+  text-decoration: none !important;
 }
 html.prism-pretty .pretty-theme-markdown > .language-pretty .sequence-diagram,
 html.prism-pretty .pretty-theme-markdown > .language-pretty .flow-chart {
@@ -714,16 +685,21 @@ html.prism-pretty .pretty-theme-markdown > .language-pretty .sequence-diagram [f
 html.prism-pretty .pretty-theme-markdown > .language-pretty .flow-chart [fill="black"] {
   fill: #2c3f51;
 }
-html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs,
-html.prism-pretty .pretty-theme-markdown > .language-pretty pre > code {
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs {
   display: block;
   overflow-x: auto;
-  padding: 0.5em;
+  padding: .5em .8em;
   background: #23241f;
   -webkit-text-size-adjust: none;
 }
+html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs > code {
+  color: inherit;
+  background-color: inherit;
+  border-radius: 0;
+  font-size: inherit;
+  padding: 0;
+}
 html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs,
-html.prism-pretty .pretty-theme-markdown > .language-pretty pre > code,
 html.prism-pretty .pretty-theme-markdown > .language-pretty .hljs-tag,
 html.prism-pretty .pretty-theme-markdown > .language-pretty .css .hljs-rules,
 html.prism-pretty .pretty-theme-markdown > .language-pretty .css .hljs-value,
