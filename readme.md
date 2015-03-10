@@ -15,7 +15,7 @@ Features
 - Show brief request headers
 - Transform unicode to text
 - Custom CSS setting
-- Advanced css preview
+- CSS properties preview
 - Markdown file preview
 
 ![](img/screenshot.png)
