@@ -95,16 +95,10 @@ function setOptions(options, keep) {
         // enable html pretty
         if (~options.formatTypes.indexOf('html')) {
             chrome.contextMenus.create({
+                id: 'PrettyPageSource',
                 type: 'normal',
                 title: 'Pretty Page Source',
-                contexts: ['page'],
-                onclick: function(info, tab) {
-                    var tabId = tab.id;
-
-                    chrome.tabs.sendMessage(tabId, {
-                        action: 'pretty_document'
-                    });
-                }
+                contexts: ['page']
             });
         }
     } else {
@@ -122,6 +116,14 @@ function setOptions(options, keep) {
         });
     }
 }
+
+chrome.contextMenus.onClicked.addListener(function (info, tab) {
+    var tabId = tab.id;
+
+    chrome.tabs.sendMessage(tabId, {
+        action: 'pretty_document'
+    });
+});
 
 chrome.storage.sync.get(function(options) {
     if (!options || Object.keys(options).length !== 9) {
@@ -142,23 +144,24 @@ chrome.storage.sync.get(function(options) {
 });
 
 // fix github csp
-chrome.webRequest.onHeadersReceived.addListener(function(request) {
-    var headers = request.responseHeaders;
-
-    headers.some(function(header, index) {
-        if (header.name.toLowerCase() == 'content-security-policy') {
-            headers.splice(index, 1);
-            return true;
-        }
-    });
-
-    return {
-        responseHeaders: headers
-    };
-}, {
-    urls: ['*://*.githubusercontent.com/*'],
-    types: ['main_frame']
-}, ['blocking', 'responseHeaders']);
+// disabled in event pages
+//chrome.webRequest.onHeadersReceived.addListener(function(request) {
+//    var headers = request.responseHeaders;
+//
+//    headers.some(function(header, index) {
+//        if (header.name.toLowerCase() == 'content-security-policy') {
+//            headers.splice(index, 1);
+//            return true;
+//        }
+//    });
+//
+//    return {
+//        responseHeaders: headers
+//    };
+//}, {
+//    urls: ['*://*.githubusercontent.com/*'],
+//    types: ['main_frame']
+//}, ['blocking', 'responseHeaders']);
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     var url = sender.url;
