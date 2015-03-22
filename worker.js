@@ -35,7 +35,7 @@ renderer.heading = function(text, level) {
         '" class="anchor" href="#' + escapedText +
         '"><span class="anchor-link"></span></a>' +
         text + '</h' + level + '>';
-}
+};
 
 marked.setOptions({
     renderer: renderer,
@@ -44,7 +44,7 @@ marked.setOptions({
     }
 });
 
-var onmessage = function(event) {
+self.onmessage = function(event) {
     var data = event.data;
     var type = data.type;
     var url = data.url;
