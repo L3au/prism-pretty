@@ -141,24 +141,23 @@ chrome.storage.sync.get(function(options) {
 });
 
 // fix github csp
-// disabled in event pages
-//chrome.webRequest.onHeadersReceived.addListener(function(request) {
-//    var headers = request.responseHeaders;
-//
-//    headers.some(function(header, index) {
-//        if (header.name.toLowerCase() == 'content-security-policy') {
-//            headers.splice(index, 1);
-//            return true;
-//        }
-//    });
-//
-//    return {
-//        responseHeaders: headers
-//    };
-//}, {
-//    urls: ['*://*.githubusercontent.com/*'],
-//    types: ['main_frame']
-//}, ['blocking', 'responseHeaders']);
+chrome.webRequest.onHeadersReceived.addListener(function(request) {
+    var headers = request.responseHeaders;
+
+    headers.some(function(header, index) {
+        if (header.name.toLowerCase() == 'content-security-policy') {
+            headers.splice(index, 1);
+            return true;
+        }
+    });
+
+    return {
+        responseHeaders: headers
+    };
+}, {
+    urls: ['*://*.githubusercontent.com/*'],
+    types: ['main_frame']
+}, ['blocking', 'responseHeaders']);
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     var url = sender.url;

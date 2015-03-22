@@ -1,17 +1,17 @@
 function template(str) {
     var strFunc = "var out = ''; out+=" + "'" +
         str.replace(/[\r\t\n]/g, " ")
-        .replace(/'(?=[^}]*}})/g, "\t")
-        .split("'").join("\\'")
-        .split("\t").join("'")
-        .replace(/{{=(.+?)}}/g, "'; out += $1; out += '")
-        .split("{{").join("';")
-        .split("}}").join("out+='") + "'; return out;";
+            .replace(/'(?=[^}]*}})/g, "\t")
+            .split("'").join("\\'")
+            .split("\t").join("'")
+            .replace(/{{=(.+?)}}/g, "'; out += $1; out += '")
+            .split("{{").join("';")
+            .split("}}").join("out+='") + "'; return out;";
 
     var fn = new Function("it", strFunc);
 
     return {
-        render: function(data) {
+        render: function (data) {
             return fn(data || {});
         }
     }
@@ -22,13 +22,13 @@ var assets = [
     'codebeautify.js'
 ];
 
-importScripts.apply(null, assets.map(function(item) {
+importScripts.apply(null, assets.map(function (item) {
     return '../js/' + item;
 }));
 
 var renderer = new marked.Renderer();
 
-renderer.heading = function(text, level) {
+renderer.heading = function (text, level) {
     var escapedText = escape(text.toLowerCase().trim().replace(/\s+/g, '-'));
 
     return '<h' + level + '><a id="' + escapedText +
@@ -39,12 +39,12 @@ renderer.heading = function(text, level) {
 
 marked.setOptions({
     renderer: renderer,
-    highlight: function(code) {
+    highlight: function (code) {
         return hljs.highlightAuto(code).value;
     }
 });
 
-self.onmessage = function(event) {
+self.onmessage = function (event) {
     var data = event.data;
     var type = data.type;
     var content = data.content;
@@ -73,21 +73,21 @@ self.onmessage = function(event) {
         files[2] = 'js/bugfree.js';
     }
 
-    Promise.all(files.map(function(url) {
-        return new Promise(function(resolve, reject) {
+    Promise.all(files.map(function (url) {
+        return new Promise(function (resolve, reject) {
             var xhr = new XMLHttpRequest();
 
-            xhr.onload = function() {
+            xhr.onload = function () {
                 resolve(xhr.responseText);
             };
-            xhr.onerror = function() {
+            xhr.onerror = function () {
                 reject();
             };
 
             xhr.open('GET', url);
             xhr.send();
         });
-    })).then(function(contents) {
+    })).then(function (contents) {
         var language, html;
         var formated = beautified = lineRows = '';
         var isMarkdown = type === 'markdown';
@@ -95,6 +95,8 @@ self.onmessage = function(event) {
         try {
             switch (type) {
                 case 'js':
+                case 'json':
+                case 'jsonp':
                     formated = js_beautify(content, {
                         indent_size: indent
                     });
@@ -181,7 +183,7 @@ self.onmessage = function(event) {
         html += '</div>';
 
         self.postMessage(html);
-    }, function() {
+    }, function () {
         self.postMessage();
     });
 };

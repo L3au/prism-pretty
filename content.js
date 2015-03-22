@@ -216,9 +216,6 @@
                 script += ';console.log("%cvar json = ", "color:teal", json);';
 
                 execScript(script);
-
-                // alias to js
-                type = 'js';
             }
 
             this.sendPrettyMsg(type, content);
