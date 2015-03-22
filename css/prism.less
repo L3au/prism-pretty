@@ -31,28 +31,7 @@ html.prism-pretty {
         }
     }
 
-    body {
-        margin: 0;
-    }
-
-    .pretty-container {
-        min-height: 100vh;
-    }
-
-    .pretty-size-13px {
-        font-size: 13px;
-        background-size: 32px 32px;
-    }
-    .pretty-size-14px {
-        font-size: 14px;
-        background-size: 34px 34px;
-    }
-    .pretty-size-15px {
-        font-size: 15px;
-        background-size: 36px 36px;
-    }
-
-    .pretty-theme-dabblet {
+    &.pretty-theme-dabblet {
         color: black;
         // text-shadow: 0 1px white;
         background: #f5f2f0 data-uri('../img/noise.png');
@@ -69,13 +48,13 @@ html.prism-pretty {
         @import "dabblet";
     }
 
-    .pretty-theme-monokai {
+    &.pretty-theme-monokai {
         background: #2a2a2a;
         color: #76d9e6;
         @import "monokai";
     }
 
-    .pretty-theme-coy {
+    &.pretty-theme-coy {
         color: black;
         // text-shadow: 0 1px white;
         background-color: #fdfdfd;
@@ -93,7 +72,20 @@ html.prism-pretty {
         @import "coy";
     }
 
-    .pretty-theme-markdown {
+    &.pretty-size-13px {
+        font-size: 13px;
+        background-size: 32px 32px;
+    }
+    &.pretty-size-14px {
+        font-size: 14px;
+        background-size: 34px 34px;
+    }
+    &.pretty-size-15px {
+        font-size: 15px;
+        background-size: 36px 36px;
+    }
+
+    &.pretty-theme-markdown {
         color: #2c3f51;
         font-size: 16px;
         line-height: 1.45;
@@ -101,12 +93,20 @@ html.prism-pretty {
         background-color: #fdfdfd;
         font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 
-        > .language-pretty {
+        .language-pretty {
             width: 60%;
             margin-left: auto;
             margin-right: auto;
             @import "markdown";
         }
+    }
+
+    body {
+        margin: 0;
+    }
+
+    .pretty-container {
+        min-height: 100vh;
     }
 
     .request-headers {
