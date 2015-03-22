@@ -42,37 +42,44 @@
         s.remove(), s = null;
     }
 
+    function getEntireHtml() {
+        var docType = new XMLSerializer().serializeToString(document.doctype);
+        return docType + '\n' + rootEl.outerHTML;
+    }
+
     var global_headers, global_options;
+    var promises = [
+        (function () {
+            return new Promise(function (resolve, reject) {
+                chrome.runtime.sendMessage({
+                    action: 'requestHeader'
+                }, function (result) {
+                    if (result.error) {
+                        reject();
+                    } else {
+                        if (result.type && result.type != 'markdown') {
+                            loading();
+                        }
+                        resolve(result);
+                    }
+                });
+            });
+        }),
+
+        (function () {
+            return new Promise(function (resolve, reject) {
+                if (/te/.test(document.readyState)) {
+                    resolve();
+                } else {
+                    document.addEventListener('DOMContentLoaded', resolve);
+                }
+            });
+        })
+    ];
 
     var app = {
         init: function () {
             var self = this;
-
-            var promises = [
-                (function () {
-                    return new Promise(function (resolve, reject) {
-                        chrome.runtime.sendMessage({
-                            action: 'requestHeader'
-                        }, function (result) {
-                            if (result.error) {
-                                reject();
-                            } else {
-                                resolve(result);
-                            }
-                        });
-                    });
-                }),
-
-                (function () {
-                    return new Promise(function (resolve, reject) {
-                        if (/te/.test(document.readyState)) {
-                            resolve();
-                        } else {
-                            document.addEventListener('DOMContentLoaded', resolve);
-                        }
-                    });
-                })
-            ];
 
             chrome.storage.sync.get(function (options) {
                 if (options.enabled) {
@@ -84,7 +91,9 @@
                         global_headers = result[0];
                         global_options = options;
 
-                        self.prettifyContent();
+                        if (!self.prettifyContent()) {
+                            unloading();
+                        }
                     });
                 }
             });
@@ -98,13 +107,13 @@
             chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 var action = request.action;
 
-                if (action == 'pretty_document') {
+                if (action == 'prettyDocument') {
                     if (rootEl.classList.contains('prism-pretty')) {
                         location.reload();
                         return;
                     }
 
-                    self.sendPrettyMsg('html');
+                    self.sendPrettyMsg('html', getEntireHtml());
                 }
             });
         },
@@ -113,38 +122,31 @@
             var style = document.createElement('style');
             var srcUrl = chrome.runtime.getURL('css/droid-sans-mono.woff2');
 
-            var cssContent = (function(){/*
-                @font-face {
-                    font-family: 'Droid Sans Mono';
-                    font-style: normal;
-                    font-weight: 400;
-                    src: local('Droid Sans Mono'), local('DroidSansMono'), url('srcUrl') format('woff2');
-                    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-                }
-            */}).toString().slice(14, -4).replace('srcUrl', srcUrl);
-
-            style.textContent = cssContent;
+            style.textContent = (function(){/*
+             @font-face {
+                 font-family: 'Droid Sans Mono';
+                 font-style: normal;
+                 font-weight: 400;
+                 src: local('Droid Sans Mono'), local('DroidSansMono'), url('srcUrl') format('woff2');
+                 unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+             }
+             */}).toString().slice(14, -4).replace('srcUrl', srcUrl);
 
             document.head.appendChild(style);
         },
 
         prettifyContent: function () {
-            var body = document.body;
-
-            if (!body) {
-                return;
-            }
-
             var content;
+            var body = document.body;
             var children = body.children;
             var pre = children[0];
 
             if (children.length == 0) {
-                content = body.textContent.trim();
+                content = body.textContent;
             }
 
             if (children.length == 1 && pre.nodeName == 'PRE') {
-                content = pre.textContent.trim();
+                content = pre.textContent;
             }
 
             if (!content) {
@@ -219,10 +221,12 @@
                 type = 'js';
             }
 
-            this.sendPrettyMsg(type);
+            this.sendPrettyMsg(type, content);
+
+            return true;
         },
 
-        sendPrettyMsg: function (type) {
+        sendPrettyMsg: function (type, content) {
             var self = this;
             var options = global_options;
             var headers = global_headers || {headers: []};
@@ -237,6 +241,7 @@
             chrome.runtime.sendMessage({
                 action: 'prettify',
                 type: type,
+                content: content,
                 headers: headers.headers,
                 options: options
             }, function (responseHtml) {
@@ -246,9 +251,18 @@
                 }
 
                 var title = document.title;
+                var className = 'prism-pretty';
+
+                if (type == 'markdown') {
+                    className += ' pretty-theme-markdown';
+                } else {
+                    className += ' pretty-theme-' + options.theme;
+                }
+
+                className += ' pretty-size-' + options.fontSize;
 
                 rootEl.innerHTML = '<head></head><body>' + responseHtml + '</body>';
-                rootEl.className = 'prism-pretty';
+                rootEl.className = className;
 
                 if (title) {
                     document.title = 'Prism Pretty: ' + title;

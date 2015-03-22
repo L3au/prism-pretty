@@ -6,7 +6,7 @@ function toDate(s) {
     return Date.parse(s) ? new Date(s).toJSON().replace(/T|\.\d+Z$/g, ' ').trim() : s;
 }
 
-function processResponseHeader(xhr, url) {
+function processResponseHeader(contentType, headers, url) {
     var rules = {
         'css': /\.css(?:[\?#]|$)/i,
         'js': /\.js(?:[\?#]|$)/i,
@@ -24,7 +24,6 @@ function processResponseHeader(xhr, url) {
     ];
 
     var type;
-    var contentType = xhr.getResponseHeader('Content-Type') || '';
 
     for (type in rules) {
         var reg = rules[type];
@@ -48,8 +47,6 @@ function processResponseHeader(xhr, url) {
         type = false;
     }
 
-    var headers = xhr.getAllResponseHeaders().trim();
-
     headers = headers.split('\n').map(function(header) {
         var arr = header.split(':');
         var name = arr[0].trim();
@@ -57,7 +54,7 @@ function processResponseHeader(xhr, url) {
 
         switch (name.toLowerCase()) {
             case 'content-length':
-                value = (Number(value) / 1000).toFixed(1) + 'K';
+                value = (parseInt(value, 10) / 1024).toFixed(1) + 'K';
                 break;
             case 'date':
             case 'expires':
@@ -121,7 +118,7 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
     var tabId = tab.id;
 
     chrome.tabs.sendMessage(tabId, {
-        action: 'pretty_document'
+        action: 'prettyDocument'
     });
 });
 
@@ -170,11 +167,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (action == 'requestHeader') {
         var xhr = new XMLHttpRequest();
 
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 2) {
-                sendResponse(processResponseHeader(xhr, url));
-                xhr.abort();
-            }
+        xhr.onload = function() {
+            var headers = xhr.getAllResponseHeaders().trim();
+            var contentType = xhr.getResponseHeader('Content-Type') || '';
+
+            sendResponse(processResponseHeader(contentType, headers, url));
         };
         xhr.onerror = function() {
             sendResponse({
@@ -183,23 +180,22 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         };
 
         xhr.timeout = 3000;
-        xhr.open('GET', url, true);
+        xhr.open('HEAD', url, true);
         xhr.send();
     }
 
     if (action == 'prettify') {
         var worker = new Worker('worker.js');
 
-        worker.onerror = function(event) {
-            worker.terminate();
+        worker.onerror = function() {
             sendResponse();
+            worker.terminate();
         };
         worker.onmessage = function(event) {
-            worker.terminate();
             sendResponse(event.data);
+            worker.terminate();
         };
 
-        request.url = url;
         request.language = navigator.language;
 
         worker.postMessage(request);

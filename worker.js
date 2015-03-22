@@ -47,13 +47,11 @@ marked.setOptions({
 self.onmessage = function(event) {
     var data = event.data;
     var type = data.type;
-    var url = data.url;
+    var content = data.content;
     var headersData = data.headers;
     var options = data.options;
     var lang = data.language;
 
-    var theme = options.theme;
-    var fontSize = options.fontSize;
     var indent = options.indent;
     var isUnicode = options.unicode;
 
@@ -61,20 +59,18 @@ self.onmessage = function(event) {
     var headers = options.headers;
     var customCSS = options.customCSS.trim();
 
-    var files = new Array(5);
-
-    files[0] = url;
+    var files = new Array(3);
 
     if (headers) {
-        files[1] = 'html/header.html';
+        files[0] = 'html/header.html';
     }
 
     if (type == 'css' || type == 'html') {
-        files[2] = 'html/preview.html';
+        files[1] = 'html/preview.html';
     }
 
     if (bugFree) {
-        files[3] = 'js/bugfree.js';
+        files[2] = 'js/bugfree.js';
     }
 
     Promise.all(files.map(function(url) {
@@ -94,8 +90,6 @@ self.onmessage = function(event) {
     })).then(function(contents) {
         var language, html;
         var formated = beautified = lineRows = '';
-
-        var content = contents[0];
         var isMarkdown = type === 'markdown';
 
         try {
@@ -141,24 +135,18 @@ self.onmessage = function(event) {
             if (bugFree && (type == 'js' || type == 'css')) {
                 var idx = +!lang.match('zh');
 
-                formated = contents[3].split('233')[idx] + '\r\n' + formated;
+                formated = contents[2].split('233')[idx] + '\r\n' + formated;
             }
 
             if (!isMarkdown) {
                 beautified = Prism.highlight(formated, language, isUnicode);
             }
         } catch (e) {
-            throw e;
-            postMessage();
+            self.postMessage();
             return;
         }
 
-        html = '<div class="pretty-container {{= it.theme }} {{= it.fontSize }}">';
-
-        html = template(html).render({
-            fontSize: 'pretty-size-' + fontSize,
-            theme: 'pretty-theme-' + (isMarkdown ? 'markdown' : theme)
-        });
+        html = '<div class="pretty-container">';
 
         if (type !== 'markdown') {
             lineRows = '<span class="line-numbers-rows">';
@@ -177,13 +165,13 @@ self.onmessage = function(event) {
         html += '</' + (isMarkdown ? 'div' : 'pre') + '>';
 
         if (headers && !isMarkdown) {
-            html += template(contents[1]).render({
+            html += template(contents[0]).render({
                 headers: headersData
             });
         }
 
         if (type == 'css' || type == 'html') {
-            html += contents[2];
+            html += contents[1];
         }
 
         if (customCSS) {
@@ -192,8 +180,8 @@ self.onmessage = function(event) {
 
         html += '</div>';
 
-        postMessage(html);
+        self.postMessage(html);
     }, function() {
-        postMessage();
+        self.postMessage();
     });
 };
