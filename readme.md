@@ -24,6 +24,10 @@ Features
 Change Log
 ---
 
+- v1.11.1
+  - modify content fetch
+  - fix scroll background
+
 - v1.10.0
   - add markdown preview
   - add format types setting
