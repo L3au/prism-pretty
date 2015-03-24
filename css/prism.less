@@ -4,7 +4,6 @@
  */
 html.prism-pretty {
     &:before {
-        content: '';
         position: fixed;
         z-index: 999999999;
         left: 0;
@@ -12,7 +11,7 @@ html.prism-pretty {
         right: 0;
         bottom: 0;
         opacity: 0;
-        visibility: hidden;
+        visibility: visible;
         -webkit-transition: .3s ease;
         transition: .3s ease;
     }
@@ -24,11 +23,24 @@ html.prism-pretty {
         }
 
         &:before {
-            background: #f8f8f8 data-uri('../img/spinner.svg') center no-repeat;
+            content: '';
+            background: #fdfdfd data-uri('../img/spinner.svg') center no-repeat;
             background-size: 20px;
             opacity: 1;
             visibility: visible;
         }
+    }
+    &.prism-pretty-dabblet:before {
+        background-color: #f5f2f0;
+    }
+    &.prism-pretty-monokai:before {
+        background-color: #fdfdfd;
+    }
+    &.prism-pretty-coy:before {
+        background-color: #fdfdfd;
+    }
+    &.prism-pretty-markdown:before {
+        background-color: rgb(253, 253, 253);
     }
 
     &.pretty-theme-dabblet {
