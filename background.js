@@ -202,6 +202,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             worker.terminate();
         };
 
+        request.url = url;
         request.language = navigator.language;
 
         worker.postMessage(request);

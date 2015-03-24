@@ -46,6 +46,7 @@ marked.setOptions({
 
 self.onmessage = function (event) {
     var data = event.data;
+    var url = data.url;
     var type = data.type;
     var content = data.content;
     var headersData = data.headers;
@@ -73,6 +74,10 @@ self.onmessage = function (event) {
         files[2] = 'js/bugfree.js';
     }
 
+    if (type == 'html') {
+        files[3] = url;
+    }
+
     Promise.all(files.map(function (url) {
         return new Promise(function (resolve, reject) {
             var xhr = new XMLHttpRequest();
@@ -91,6 +96,11 @@ self.onmessage = function (event) {
         var language, html;
         var formated = beautified = lineRows = '';
         var isMarkdown = type === 'markdown';
+
+        // pretty html page
+        if (type == 'html') {
+            content = contents[3];
+        }
 
         try {
             switch (type) {

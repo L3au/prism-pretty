@@ -136,7 +136,8 @@
                         return;
                     }
 
-                    self.sendPrettyMsg('html', getEntireHtml());
+                    // pretty html
+                    self.sendPrettyMsg('html', '');
                 }
             });
         },
