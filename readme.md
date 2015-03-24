@@ -24,6 +24,9 @@ Features
 Change Log
 ---
 
+- v1.11.4
+  - fix a fatal potential bug...
+
 - v1.11.1
   - modify content fetch
   - fix scroll background
