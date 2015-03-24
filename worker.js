@@ -130,7 +130,7 @@ self.onmessage = function (event) {
                     break;
 
                 default:
-                    postMessage();
+                    self.postMessage();
                     return;
             }
 

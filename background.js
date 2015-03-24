@@ -1,12 +1,24 @@
-function isEmpty(o) {
-    return Object.keys(o).length == 0;
-}
-
 function toDate(s) {
     return Date.parse(s) ? new Date(s).toJSON().replace(/T|\.\d+Z$/g, ' ').trim() : s;
 }
 
-function processResponseHeader(contentType, headers, url) {
+function getHeader(name, headers) {
+    var ret = {};
+
+    headers.some(function(header, index) {
+        if (header.name.toLowerCase() == name.toLowerCase()) {
+            ret = {
+                index: index,
+                value: header.value.toLowerCase()
+            };
+            return true;
+        }
+    });
+
+    return ret;
+}
+
+function processResponseHeaders(headers, url) {
     var rules = {
         'css': /\.css(?:[\?#]|$)/i,
         'js': /\.js(?:[\?#]|$)/i,
@@ -24,6 +36,7 @@ function processResponseHeader(contentType, headers, url) {
     ];
 
     var type;
+    var contentType = getHeader('content-type', headers).value || '';
 
     for (type in rules) {
         var reg = rules[type];
@@ -47,10 +60,9 @@ function processResponseHeader(contentType, headers, url) {
         type = false;
     }
 
-    headers = headers.split('\n').map(function(header) {
-        var arr = header.split(':');
-        var name = arr[0].trim();
-        var value = arr.slice(1).join('').trim();
+    headers = headers.map(function(header) {
+        var name = header.name;
+        var value = header.value;
 
         switch (name.toLowerCase()) {
             case 'content-length':
@@ -140,47 +152,42 @@ chrome.storage.sync.get(function(options) {
     setOptions(options, true);
 });
 
-// fix github csp
+var cacheHeaders = {};
+// cache response headers & fix github csp
 chrome.webRequest.onHeadersReceived.addListener(function(request) {
+    var url = request.url;
+    var tabId = request.tabId;
     var headers = request.responseHeaders;
 
-    headers.some(function(header, index) {
-        if (header.name.toLowerCase() == 'content-security-policy') {
-            headers.splice(index, 1);
-            return true;
-        }
-    });
+    cacheHeaders[tabId] = processResponseHeaders(headers, url);
 
-    return {
-        responseHeaders: headers
-    };
+    if (~url.indexOf('.githubusercontent.com')) {
+        var cspHeader = getHeader('content-security-policy', headers);
+
+        if (cspHeader.value) {
+            headers.splice(cspHeader.index, 1);
+            return {
+                responseHeaders: headers
+            };
+        }
+    }
 }, {
-    urls: ['*://*.githubusercontent.com/*'],
+    urls: ['<all_urls>'],
     types: ['main_frame']
 }, ['blocking', 'responseHeaders']);
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     var url = sender.url;
+    var tabId = sender.tab.id;
     var action = request.action;
 
-    if (action == 'requestHeader') {
-        var xhr = new XMLHttpRequest();
-
-        xhr.onload = function() {
-            var headers = xhr.getAllResponseHeaders().trim();
-            var contentType = xhr.getResponseHeader('Content-Type') || '';
-
-            sendResponse(processResponseHeader(contentType, headers, url));
-        };
-        xhr.onerror = function() {
-            sendResponse({
-                error: true
-            });
-        };
-
-        xhr.timeout = 3000;
-        xhr.open('HEAD', url, true);
-        xhr.send();
+    if (action == 'requestHeaders') {
+        if (url.slice(0, 4) == 'file') {
+            sendResponse(processResponseHeaders([], url));
+        } else {
+            sendResponse(cacheHeaders[tabId]);
+            delete cacheHeaders[tabId];
+        }
     }
 
     if (action == 'prettify') {
