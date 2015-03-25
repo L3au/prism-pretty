@@ -67,14 +67,14 @@
         return docType + '\n' + rootEl.outerHTML;
     }
 
-    var global_options, global_headers;
+    var global_options, global_headers, global_style;
     var promises = [
         (function () {
             return new Promise(function (resolve, reject) {
                 chrome.runtime.sendMessage({
                     action: 'requestHeaders'
                 }, function (headers) {
-                    global_headers = headers;
+                    global_headers = headers || {};
 
                     if (global_options.enabled) {
                         if (headers.type == 'markdown') {
@@ -143,20 +143,19 @@
         },
 
         loadFont: function () {
-            var style = document.createElement('style');
+            var fontUrl = chrome.runtime.getURL('css/font.css');
             var srcUrl = chrome.runtime.getURL('css/droid-sans-mono.woff2');
 
-            style.textContent = (function () {/*
-             @font-face {
-                 font-family: 'Droid Sans Mono';
-                 font-style: normal;
-                 font-weight: 400;
-                 src: local('Droid Sans Mono'), local('DroidSansMono'), url('srcUrl') format('woff2');
-                 unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-             }
-             */}).toString().slice(14, -4).replace('srcUrl', srcUrl);
+            var xhr = new XMLHttpRequest();
 
-            document.head.appendChild(style);
+            xhr.open('GET', fontUrl);
+            xhr.onload = function () {
+                global_style = '<style>';
+                global_style += xhr.responseText.replace('srcUrl', srcUrl);
+                global_style += '</style>';
+            };
+
+            xhr.send();
         },
 
         prettifyContent: function () {
@@ -241,6 +240,9 @@
 
             loading();
 
+            // load Droid Sans font
+            self.loadFont();
+
             chrome.runtime.sendMessage({
                 action: 'prettify',
                 type: type,
@@ -266,8 +268,7 @@
                     document.title = 'Prism Pretty: ' + title;
                 }
 
-                // load Droid Sans font
-                self.loadFont();
+                document.head.insertAdjacentHTML('beforeend', global_style);
 
                 var headerEl = $('.request-headers');
 
