@@ -291,7 +291,9 @@
                     });
 
                     if (anchor) {
-                        window.scrollTo(0, anchor.getBoundingClientRect().top - 10);
+                        setTimeout(function () {
+                            window.scrollTo(0, anchor.getBoundingClientRect().top - 10);
+                        }, 100);
                     }
                 }
 
