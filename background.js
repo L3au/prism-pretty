@@ -159,7 +159,12 @@ chrome.webRequest.onHeadersReceived.addListener(function(request) {
     var tabId = request.tabId;
     var headers = request.responseHeaders;
 
-    cacheHeaders[tabId] = processResponseHeaders(headers, url);
+    chrome.tabs.get(tabId, function (tab) {
+        console.log('onHeadersReceived', Date.now());
+        if (tab.url.indexOf('view-source') != 0) {
+            cacheHeaders[tabId] = processResponseHeaders(headers, url);
+        }
+    });
 
     if (~url.indexOf('.githubusercontent.com')) {
         var cspHeader = getHeader('content-security-policy', headers);
@@ -182,6 +187,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     var action = request.action;
 
     if (action == 'requestHeaders') {
+        console.log('requestHeaders', Date.now());
         if (url.slice(0, 4) == 'file') {
             sendResponse(processResponseHeaders([], url));
         } else {
