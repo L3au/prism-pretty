@@ -160,7 +160,6 @@ chrome.webRequest.onHeadersReceived.addListener(function(request) {
     var headers = request.responseHeaders;
 
     chrome.tabs.get(tabId, function (tab) {
-        console.log('onHeadersReceived', Date.now());
         if (tab.url.indexOf('view-source') != 0) {
             cacheHeaders[tabId] = processResponseHeaders(headers, url);
         }
@@ -187,7 +186,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     var action = request.action;
 
     if (action == 'requestHeaders') {
-        console.log('requestHeaders', Date.now());
         if (url.slice(0, 4) == 'file') {
             sendResponse(processResponseHeaders([], url));
         } else {
