@@ -32,7 +32,7 @@
 
     function unloading() {
         var themeCls = 'prism-pretty-' + global_options.theme;
-        removeClass('prism-pretty prism-pretty-spinner' + themeCls);
+        removeClass('prism-pretty prism-pretty-spinner ' + themeCls);
     }
 
     function execScript(content) {
@@ -256,9 +256,19 @@
                 content: content,
                 headers: headers.headers,
                 options: options
-            }, function (responseHtml) {
-                if (!responseHtml) {
+            }, function (response) {
+                if (!response) {
                     unloading();
+                    return;
+                }
+                
+                if (response.timeout) {
+                    unloading();
+                    addClass('prism-pretty-too-large');
+
+                    setTimeout(function () {
+                        removeClass('prism-pretty-too-large');
+                    }, 2500);
                     return;
                 }
 
@@ -268,7 +278,7 @@
                 className += ' pretty-theme-' + options.theme;
                 className += ' pretty-size-' + options.fontSize;
 
-                rootEl.innerHTML = '<head></head><body>' + responseHtml + '</body>';
+                rootEl.innerHTML = '<head></head><body>' + response + '</body>';
                 rootEl.className = className;
 
                 if (title) {

@@ -2,6 +2,22 @@
  * Prism Pretty theme
  * @author Leshu
  */
+html.prism-pretty-too-large:before {
+  content: 'Prism Pretty: Too Large File...';
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 14em;
+  height: 2em;
+  line-height: 2em;
+  margin: auto;
+  color: #ccc;
+  text-align: center;
+  border-radius: 5px;
+  background-color: #282828;
+}
 html.prism-pretty {
   /**
      * Cute little value previewers

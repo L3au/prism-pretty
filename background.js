@@ -175,6 +175,7 @@ chrome.webRequest.onHeadersReceived.addListener(function(request) {
     types: ['main_frame']
 }, ['responseHeaders', 'blocking']);
 
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     var url = sender.url;
     var action = request.action;
@@ -188,18 +189,28 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         var worker = new Worker('worker.js');
 
         worker.onerror = function() {
-            sendResponse();
+            worker.done = true;
             worker.terminate();
+            sendResponse();
         };
         worker.onmessage = function(event) {
-            sendResponse(event.data);
+            worker.done = true;
             worker.terminate();
+            sendResponse(event.data);
         };
 
         request.url = url;
         request.language = navigator.language;
 
         worker.postMessage(request);
+
+        setTimeout(function () {
+            worker.terminate();
+            worker = null;
+            sendResponse({
+                timeout: true
+            });
+        }, 5555);
     }
 
     return true;
