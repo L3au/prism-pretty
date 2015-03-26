@@ -2,7 +2,7 @@
     {{ it.headers.forEach(function (header) { }}
     <tr>
         <td>{{= header.name }}</td>
-        <td>{{= header.value }}</td>
+        <td{{= (header.value == 'aproxy' || header.name.toLowerCase() == 'x-combo-files') ? ' class="aproxy"' : '' }}>{{= header.value }}</td>
     </tr>
     {{ }); }}
 </table>

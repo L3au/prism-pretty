@@ -291,8 +291,8 @@
 
                 if (headerEl) {
                     setTimeout(function () {
-                        headerEl.style.cssText = 'opacity:0;-webkit-transition:0.5s ease-out;';
-                    }, 3000);
+                        headerEl.style.cssText = 'opacity:0';
+                    }, 5000);
                 }
 
                 if (type === 'markdown') {

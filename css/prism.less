@@ -71,6 +71,10 @@ html.prism-pretty {
             color: #fff;
         }
 
+        .pretty-container {
+            background: #f5f2f0 data-uri('../img/noise.png');
+        }
+
         .request-headers {
             color: #666;
         }
@@ -82,6 +86,10 @@ html.prism-pretty {
         background: #2a2a2a;
         color: #76d9e6;
         @import "monokai";
+
+        .pretty-container {
+            background-color: #2a2a2a;
+        }
     }
 
     &.pretty-theme-coy {
@@ -94,6 +102,12 @@ html.prism-pretty {
         background-size: 40px 40px;
         background-origin: content-box;
         box-sizing: border-box;
+
+        .pretty-container {
+//            background: inherit;
+//            background-color: #fdfdfd;
+//            background-image: data-uri('../img/coy.png');
+        }
 
         .request-headers {
             color: #666;
@@ -145,21 +159,14 @@ html.prism-pretty {
         right: 1em;
         top: 0;
         font-weight: lighter;
-        font-family: "Helvetica Neue", Helvetica;
+        font-family: "Helvetica Neue", 'Droid Sans Mono', sans-serif;
         -webkit-user-select: none;
-        transition: .5s ease-out 3s;
+        transition: .5s ease-out;
         background: inherit;
         border-collapse: collapse;
         border-spacing: 0;
         line-height: 1.8;
         color: inherit;
-
-        > tbody {
-            opacity: 0;
-            visibility: hidden;
-            -webkit-transition: 0.5s ease-out;
-            transition: 0.5s ease-out;
-        }
 
         &:hover {
             opacity: 1 !important;
@@ -169,6 +176,10 @@ html.prism-pretty {
                 opacity: 1;
                 visibility: visible;
             }
+        }
+
+        .aproxy {
+            color: #f26651;
         }
 
         tr {
@@ -188,7 +199,6 @@ html.prism-pretty {
                 &:last-child {
                     display: -webkit-box;
                     max-width: 300px;
-                    overflow: auto;
                     text-align: left;
                     text-indent: 3px;
                     -webkit-line-clamp: 3;
@@ -196,6 +206,10 @@ html.prism-pretty {
                 }
             }
         }
+    }
+
+    .request-headers-fade {
+
     }
 
     .token.href {
