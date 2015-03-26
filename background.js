@@ -152,18 +152,13 @@ chrome.storage.sync.get(function(options) {
     setOptions(options, true);
 });
 
-var cacheHeaders = {};
+var cacheHeaders;
 // cache response headers & fix github csp
 chrome.webRequest.onHeadersReceived.addListener(function(request) {
     var url = request.url;
-    var tabId = request.tabId;
     var headers = request.responseHeaders;
 
-    chrome.tabs.get(tabId, function (tab) {
-        if (tab.url.indexOf('view-source') != 0) {
-            cacheHeaders[tabId] = processResponseHeaders(headers, url);
-        }
-    });
+    cacheHeaders = processResponseHeaders(headers, url);
 
     if (~url.indexOf('.githubusercontent.com')) {
         var cspHeader = getHeader('content-security-policy', headers);
@@ -178,20 +173,15 @@ chrome.webRequest.onHeadersReceived.addListener(function(request) {
 }, {
     urls: ['<all_urls>'],
     types: ['main_frame']
-}, ['blocking', 'responseHeaders']);
+}, ['responseHeaders', 'blocking']);
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     var url = sender.url;
-    var tabId = sender.tab.id;
     var action = request.action;
 
     if (action == 'requestHeaders') {
-        if (url.slice(0, 4) == 'file') {
-            sendResponse(processResponseHeaders([], url));
-        } else {
-            sendResponse(cacheHeaders[tabId]);
-            delete cacheHeaders[tabId];
-        }
+        sendResponse(cacheHeaders || processResponseHeaders([], url));
+        cacheHeaders = null;
     }
 
     if (action == 'prettify') {

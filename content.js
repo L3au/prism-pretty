@@ -74,20 +74,23 @@
                 chrome.runtime.sendMessage({
                     action: 'requestHeaders'
                 }, function (headers) {
-                    global_headers = headers || {};
-
-                    if (global_options.enabled) {
-                        if (headers.type == 'markdown') {
-                            global_options.theme = 'markdown';
-                        }
-
-                        if (headers.type) {
-                            loading();
-                        }
-                        resolve(headers);
-                    } else {
+                    if (!global_options.enabled) {
                         reject();
+                        return;
                     }
+
+                    global_headers = headers;
+                    rootEl = document.documentElement;
+
+                    if (headers.type == 'markdown') {
+                        global_options.theme = 'markdown';
+                    }
+
+                    if (headers.type) {
+                        loading();
+                    }
+
+                    resolve(headers);
                 });
             });
         }),
@@ -113,8 +116,6 @@
                 Promise.all(promises.map(function (p) {
                     return p();
                 })).then(function () {
-                    rootEl = document.documentElement;
-
                     if (!self.prettifyContent()) {
                         unloading();
                     }
@@ -161,15 +162,21 @@
         prettifyContent: function () {
             var content;
             var body = document.body;
+
+            // fix somehow ...
+            if (!body) {
+                return;
+            }
+
             var children = body.children;
             var pre = children[0];
 
             if (children.length == 0) {
-                content = body.textContent;
+                content = body.textContent.trim();
             }
 
             if (children.length == 1 && pre.nodeName == 'PRE') {
-                content = pre.textContent;
+                content = pre.textContent.trim();
             }
 
             if (!content) {
@@ -236,7 +243,7 @@
         sendPrettyMsg: function (type, content) {
             var self = this;
             var options = global_options;
-            var headers = global_headers || {headers: []};
+            var headers = global_headers;
 
             loading();
 
