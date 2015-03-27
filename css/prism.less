@@ -149,6 +149,15 @@ html.prism-pretty {
         margin: 0;
     }
 
+    .copy {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 5px;
+        width: 80px;
+        margin: auto;
+    }
+
     .pretty-container {
         min-height: 100vh;
     }
@@ -183,6 +192,10 @@ html.prism-pretty {
         }
 
         tr {
+            &:nth-child(2) {
+                border-bottom: 1px dashed #D5D5D5;
+            }
+
             > td {
                 vertical-align: top;
 

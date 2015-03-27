@@ -2,10 +2,22 @@ function toDate(s) {
     return Date.parse(s) ? new Date(s).toJSON().replace(/T|\.\d+Z$/g, ' ').trim() : s;
 }
 
+function copy(content) {
+    var textarea = document.createElement('textarea');
+
+    textarea.value = content;
+    document.body.appendChild(textarea);
+
+    textarea.select();
+
+    document.execCommand('copy');
+    textarea.remove();
+}
+
 function getHeader(name, headers) {
     var ret = {};
 
-    headers.some(function(header, index) {
+    headers.some(function (header, index) {
         if (header.name.toLowerCase() == name.toLowerCase()) {
             ret = {
                 index: index,
@@ -46,7 +58,7 @@ function processResponseHeaders(headers, url) {
         }
     }
 
-    var isProperType = mineTypes.some(function(mineType) {
+    var isProperType = mineTypes.some(function (mineType) {
         if (type == 'markdown') {
             return true;
         }
@@ -60,7 +72,7 @@ function processResponseHeaders(headers, url) {
         type = false;
     }
 
-    headers = headers.map(function(header) {
+    headers = headers.map(function (header) {
         var name = header.name;
         var value = header.value;
 
@@ -134,7 +146,7 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
     });
 });
 
-chrome.storage.sync.get(function(options) {
+chrome.storage.sync.get(function (options) {
     if (!options || Object.keys(options).length !== 9) {
         options = {
             enabled: true,
@@ -152,31 +164,54 @@ chrome.storage.sync.get(function(options) {
     setOptions(options, true);
 });
 
-var cacheHeaders;
-// cache response headers & fix github csp
+// fix github csp
 chrome.webRequest.onHeadersReceived.addListener(function(request) {
-    var url = request.url;
     var headers = request.responseHeaders;
+    var csp = getHeader('content-security-policy', headers);
 
-    cacheHeaders = processResponseHeaders(headers, url);
+    if (csp.value) {
+        headers.splice(csp.index, 1);
 
-    if (~url.indexOf('.githubusercontent.com')) {
-        var cspHeader = getHeader('content-security-policy', headers);
-
-        if (cspHeader.value) {
-            headers.splice(cspHeader.index, 1);
-            return {
-                responseHeaders: headers
-            };
+        return {
+            responseHeaders: headers
         }
     }
 }, {
-    urls: ['<all_urls>'],
+    urls: ['*://*.githubusercontent.com/*'],
     types: ['main_frame']
 }, ['responseHeaders', 'blocking']);
 
+var cacheHeaders;
+// cache response headers
+chrome.webRequest.onResponseStarted.addListener(function (request) {
+    var url = request.url;
+    var headers = request.responseHeaders;
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    var ip = request.ip;
+    var method = request.method;
+    var status = request.statusLine;
+
+    if (ip) {
+        headers.splice(0, 0, {
+            name: 'Status Line',
+            value: status
+        }, {
+            name: 'Remote Address',
+            value: ip
+        }/*, {
+            name: 'Request Method',
+            value: method
+        }*/);
+    }
+
+    cacheHeaders = processResponseHeaders(headers, url);
+}, {
+    urls: ['<all_urls>'],
+    types: ['main_frame']
+}, ['responseHeaders']);
+
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     var url = sender.url;
     var action = request.action;
 
@@ -188,12 +223,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (action == 'prettify') {
         var worker = new Worker('worker.js');
 
-        worker.onerror = function() {
+        worker.onerror = function () {
             worker.done = true;
             worker.terminate();
             sendResponse();
         };
-        worker.onmessage = function(event) {
+        worker.onmessage = function (event) {
             worker.done = true;
             worker.terminate();
             sendResponse(event.data);

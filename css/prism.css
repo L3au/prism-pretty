@@ -867,6 +867,14 @@ html.prism-pretty.pretty-theme-markdown .language-pretty .php .xml {
 html.prism-pretty body {
   margin: 0;
 }
+html.prism-pretty .copy {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 5px;
+  width: 80px;
+  margin: auto;
+}
 html.prism-pretty .pretty-container {
   min-height: 100vh;
 }
@@ -895,6 +903,9 @@ html.prism-pretty .request-headers:hover > tbody {
 }
 html.prism-pretty .request-headers .aproxy {
   color: #f26651;
+}
+html.prism-pretty .request-headers tr:nth-child(2) {
+  border-bottom: 1px dashed #D5D5D5;
 }
 html.prism-pretty .request-headers tr > td {
   vertical-align: top;
