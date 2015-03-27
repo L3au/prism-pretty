@@ -41,7 +41,8 @@
         script.textContent = 'try{' + content + '}catch(e){}';
 
         document.head.appendChild(script);
-        script.remove(); script = null;
+        script.remove();
+        script = null;
     }
 
     function detectCSS(content) {
@@ -67,7 +68,8 @@
         return docType + '\n' + rootEl.outerHTML;
     }
 
-    var global_options, global_headers, global_style;
+    var global_options, global_headers;
+    var global_style = '@font-face{font-family:"Droid Sans Mono";src:url("fontSrc") format("woff2");}';
     var promises = [
         (function () {
             return new Promise(function (resolve, reject) {
@@ -141,29 +143,17 @@
                     self.sendPrettyMsg('html', '');
                 }
             });
-        },
 
-        loadFont: function () {
-            var fontUrl = chrome.runtime.getURL('css/font.css');
-            var srcUrl = chrome.runtime.getURL('css/droid-sans-mono.woff2');
+            var fontSrc = chrome.runtime.getURL('css/droid-sans-mono.woff2');
 
-            var xhr = new XMLHttpRequest();
-
-            xhr.open('GET', fontUrl);
-            xhr.onload = function () {
-                global_style = '<style>';
-                global_style += xhr.responseText.replace('srcUrl', srcUrl);
-                global_style += '</style>';
-            };
-
-            xhr.send();
+            global_style = '<style>' + global_style.replace('fontSrc', fontSrc) + '</style>';
         },
 
         prettifyContent: function () {
             var content;
             var body = document.body;
 
-            // fix somehow ...
+            // fix somehow xxx...
             if (!body) {
                 return;
             }
@@ -189,7 +179,7 @@
                 try {
                     JSON.parse(content);
                     type = 'json';
-                } catch(e) {
+                } catch (e) {
                     try {
                         esprima.parse(content);
                         type = 'js';
@@ -197,7 +187,7 @@
                         if (/^[\s\w]+\(\{/.test(content)) {
                             type = 'jsonp';
                         }
-                    } catch(e) {
+                    } catch (e) {
                         type = detectCSS(content);
                     }
                 }
@@ -241,14 +231,10 @@
         },
 
         sendPrettyMsg: function (type, content) {
-            var self = this;
             var options = global_options;
             var headers = global_headers;
 
             loading();
-
-            // load Droid Sans font
-            self.loadFont();
 
             chrome.runtime.sendMessage({
                 action: 'prettify',
@@ -261,7 +247,7 @@
                     unloading();
                     return;
                 }
-                
+
                 if (response.timeout) {
                     unloading();
                     addClass('prism-pretty-too-large');
@@ -285,18 +271,37 @@
                     document.title = 'Prism Pretty: ' + title;
                 }
 
+                // load Droid Sans font
                 document.head.insertAdjacentHTML('beforeend', global_style);
 
-                var headerEl = $('.request-headers');
 
+                // headers fade
+                var headerEl = $('.request-headers');
                 if (headerEl) {
                     setTimeout(function () {
-                        headerEl.style.cssText = 'opacity:0';
+                        headerEl.style.opacity = 0;
                     }, 5000);
                 }
 
+                // preview css
+                var wrap;
+                if (wrap = $('.preview-wrap')) {
+                    var script = $('script', wrap);
+
+                    if (script) {
+                        execScript(script.textContent);
+                        script.remove();
+                    }
+                }
+
+                // markdown hash restore
                 if (type === 'markdown') {
                     var hash = location.hash.slice(1);
+
+                    if (!hash) {
+                        return;
+                    }
+
                     var anchors = $$('.anchor');
                     var anchor;
 
@@ -311,17 +316,6 @@
                         setTimeout(function () {
                             window.scrollTo(0, anchor.getBoundingClientRect().top - 10);
                         }, 100);
-                    }
-                }
-
-                var wrap;
-
-                if (wrap = $('.preview-wrap')) {
-                    var script = $('script', wrap);
-
-                    if (script) {
-                        execScript(script.textContent);
-                        script.remove();
                     }
                 }
             });
