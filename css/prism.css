@@ -881,8 +881,9 @@ html.prism-pretty .pretty-container {
 html.prism-pretty .request-headers {
   position: fixed;
   z-index: 1;
-  right: 1em;
+  right: 0;
   top: 0;
+  padding-right: 1em;
   font-weight: lighter;
   font-family: "Helvetica Neue", 'Droid Sans Mono', sans-serif;
   -webkit-user-select: none;
