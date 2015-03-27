@@ -24,8 +24,12 @@ Features
 Change Log
 ---
 
+- v1.12.0
+  - performance improved
+  - other changes
+
 - v1.11.4
-  - fix a fatal potential bug...
+  - fix a potential fatal bug...
 
 - v1.11.1
   - modify content fetch
