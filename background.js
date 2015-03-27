@@ -188,7 +188,6 @@ chrome.webRequest.onResponseStarted.addListener(function (request) {
     var headers = request.responseHeaders;
 
     var ip = request.ip;
-    var method = request.method;
     var status = request.statusLine;
 
     if (ip) {
@@ -198,10 +197,7 @@ chrome.webRequest.onResponseStarted.addListener(function (request) {
         }, {
             name: 'Remote Address',
             value: ip
-        }/*, {
-            name: 'Request Method',
-            value: method
-        }*/);
+        });
     }
 
     cacheHeaders = processResponseHeaders(headers, url);
