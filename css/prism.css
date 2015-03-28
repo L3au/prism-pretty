@@ -883,24 +883,28 @@ html.prism-pretty .request-headers {
   z-index: 1;
   right: 0;
   top: 0;
-  padding-right: 1em;
-  font-weight: lighter;
-  font-family: "Helvetica Neue", 'Droid Sans Mono', sans-serif;
-  -webkit-user-select: none;
-  transition: 0.5s ease-out;
+  bottom: 0;
   background: inherit;
-  border-collapse: collapse;
-  border-spacing: 0;
-  line-height: 1.8;
-  color: inherit;
+  overflow-y: auto;
+  font-family: "Helvetica Neue", 'Droid Sans Mono', sans-serif;
+  transition: 0.5s ease-out;
+  -webkit-user-select: none;
 }
 html.prism-pretty .request-headers:hover {
   opacity: 1 !important;
   -webkit-user-select: auto;
 }
-html.prism-pretty .request-headers:hover > tbody {
+html.prism-pretty .request-headers:hover > table {
   opacity: 1;
   visibility: visible;
+}
+html.prism-pretty .request-headers table {
+  line-height: 1.5;
+  color: inherit;
+  background: inherit;
+  font-weight: lighter;
+  border-spacing: 0;
+  border-collapse: collapse;
 }
 html.prism-pretty .request-headers .aproxy {
   color: #f26651;
@@ -920,12 +924,12 @@ html.prism-pretty .request-headers tr > td:first-child:after {
   margin-left: 5px;
 }
 html.prism-pretty .request-headers tr > td:last-child {
-  display: -webkit-box;
-  max-width: 300px;
-  text-align: left;
-  text-indent: 3px;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  max-width: 320px;
+  padding-left: 3px;
+  padding-right: .5em;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 html.prism-pretty .token.href {
   color: inherit;

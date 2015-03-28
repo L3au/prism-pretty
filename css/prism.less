@@ -167,25 +167,30 @@ html.prism-pretty {
         z-index: 1;
         right: 0;
         top: 0;
-        padding-right: 1em;
-        font-weight: lighter;
-        font-family: "Helvetica Neue", 'Droid Sans Mono', sans-serif;
-        -webkit-user-select: none;
-        transition: .5s ease-out;
+        bottom: 0;
         background: inherit;
-        border-collapse: collapse;
-        border-spacing: 0;
-        line-height: 1.8;
-        color: inherit;
+        overflow-y: auto;
+        font-family: "Helvetica Neue", 'Droid Sans Mono', sans-serif;
+        transition: .5s ease-out;
+        -webkit-user-select: none;
 
         &:hover {
             opacity: 1 !important;
             -webkit-user-select: auto;
 
-            & > tbody {
+            & > table {
                 opacity: 1;
                 visibility: visible;
             }
+        }
+
+        table {
+            line-height: 1.5;
+            color: inherit;
+            background: inherit;
+            font-weight: lighter;
+            border-spacing: 0;
+            border-collapse: collapse;
         }
 
         .aproxy {
@@ -211,19 +216,15 @@ html.prism-pretty {
                 }
 
                 &:last-child {
-                    display: -webkit-box;
-                    max-width: 300px;
-                    text-align: left;
-                    text-indent: 3px;
-                    -webkit-line-clamp: 3;
-                    -webkit-box-orient: vertical;
+                    max-width: 320px;
+                    padding-left: 3px;
+                    padding-right: .5em;
+                    box-sizing: border-box;
+                    word-wrap: break-word;
+                    word-break: break-all;
                 }
             }
         }
-    }
-
-    .request-headers-fade {
-
     }
 
     .token.href {
