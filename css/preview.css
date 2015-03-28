@@ -1,0 +1,50 @@
+/* CSS Properties Preview with Prism Pretty @L3au */
+
+/* 1、 颜色 */
+.color {
+    color: teal;
+    background-color: #E72106;
+    border-color: rgb(10, 230, 67);
+    -webkit-mask-box-image: hsl(233, 50%, 50%);
+}
+
+/* 2、长度(px) */
+.absolute-length {
+    width: 400px;
+    height: 200px;
+}
+
+/* 3、时间 */
+.time {
+    transition: .3s;
+    -webkit-animation: 500ms time 1s;
+}
+
+/* 4、角度 */
+.angle {
+    transform: rotate(233deg);
+    -webkit-transform: rotate(2rad);
+}
+
+/* 5、字体 */
+.font-family {
+    font-family: sans-serif;
+    font-family: monospace;
+}
+
+/* 6、渐变 */
+.gradient {
+    background-image: linear-gradient(45deg, #f06, yellow);
+}
+
+/* 7、动画函数 */
+.easing {
+    transition: .3s ease-in-out;
+    -webkit-transition: 100ms linear;
+}
+
+/* 8、图片预览 */
+.url {
+    background-image: url('../images/prism-pretty.png');
+    -webkit-mask-image: url('../images/mew-proxy.png');
+}
