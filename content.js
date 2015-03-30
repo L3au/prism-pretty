@@ -69,7 +69,12 @@
     }
 
     var global_options, global_headers;
+
+    var fontSrc = chrome.runtime.getURL('css/droid-sans-mono.woff2');
     var global_style = '@font-face{font-family:"Droid Sans Mono";src:url("fontSrc") format("woff2");}';
+
+    global_style = '<style>' + global_style.replace('fontSrc', fontSrc) + '</style>';
+
     var promises = [
         (function () {
             return new Promise(function (resolve, reject) {
@@ -143,10 +148,6 @@
                     self.sendPrettyMsg('html', '');
                 }
             });
-
-            var fontSrc = chrome.runtime.getURL('css/droid-sans-mono.woff2');
-
-            global_style = '<style>' + global_style.replace('fontSrc', fontSrc) + '</style>';
         },
 
         prettifyContent: function () {

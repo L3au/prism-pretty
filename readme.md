@@ -24,6 +24,9 @@ Features
 Change Log
 ---
 
+- v1.12.1
+  - fix response headers style
+
 - v1.12.0
   - performance improved
   - other changes
