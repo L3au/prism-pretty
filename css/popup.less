@@ -55,13 +55,37 @@ h1 {
 
 .help {
     position: absolute;
-    right: 5px;
-    top: 9px;
+    right: 15px;
+    top: 11px;
     display: flex;
-    width: 200px;
     font-size: 12px;
     list-style-type: none;
-    justify-content: space-between;
+
+    > li {
+        margin-left: 10px;
+    }
+
+    .github:before {
+        content: 'Github';
+    }
+}
+
+.help-en {
+    .reviews:before {
+        content: 'Reviews :)';
+    }
+    .feedback:before {
+        content: 'Feedback';
+    }
+}
+
+.help-zh {
+    .reviews:before {
+        content: '评论 :)';
+    }
+    .feedback:before {
+        content: '反馈';
+    }
 }
 
 textarea {
