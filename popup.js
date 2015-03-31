@@ -58,7 +58,7 @@
         updateView();
 
         $('html').addClass('popup-show');
-        $('.help').addClass('help-' + (!options.lang ? 'zh' : 'en' ));
+        $('.help').addClass('help-' + (options.lang ? 'zh' : 'en' ));
     });
 
     form.on('submit', function (e) {
