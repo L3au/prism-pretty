@@ -93,7 +93,7 @@
                         global_options.theme = 'markdown';
                     }
 
-                    if (headers.type) {
+                    if (headers.type && headers.type != 'markdown') {
                         loading();
                     }
 
