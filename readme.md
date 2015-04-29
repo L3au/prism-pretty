@@ -24,6 +24,9 @@ Features
 Change Log
 ---
 
+- v1.13.0
+  - fix js code detect
+
 - v1.12.1
   - fix response headers style
 
