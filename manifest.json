@@ -1,11 +1,18 @@
 {
     "manifest_version": 2,
     "name": "Prism Pretty",
-    "version": "1.12.1",
+    "version": "1.12.2",
     "author": "L3au",
     "description": "A Chrome Extension to format/highlight/preview HTML/JS/CSS/Markdown code with Prism.js",
     "minimum_chrome_version": "31.0.1650.8",
-    "permissions": ["tabs", "<all_urls>", "storage", "webRequest", "webRequestBlocking", "contextMenus"],
+    "permissions": [
+        "tabs",
+        "<all_urls>",
+        "storage",
+        "webRequest",
+        "webRequestBlocking",
+        "contextMenus"
+    ],
     "update_url": "http://clients2.google.com/service/update2/crx",
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "background": {
@@ -15,11 +22,12 @@
         {
             "matches": ["<all_urls>"],
             "css": ["css/prism.css"],
-            "js": ["js/esprima.js", "content.js"],
+            "js": ["content.js"],
             "run_at": "document_start"
         }
     ],
     "web_accessible_resources": [
+        "*.js",
         "js/*",
         "css/*",
         "html/*",
