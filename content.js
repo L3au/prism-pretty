@@ -182,10 +182,10 @@
                     type = 'json';
                 } catch (e) {
                     try {
-                        esprima.parse(content);
+                        new Function(content);
                         type = 'js';
 
-                        if (/^[\s\w]+\(\{/.test(content)) {
+                        if (/^\s*[\w\-\$]+\(\{/.test(content)) {
                             type = 'jsonp';
                         }
                     } catch (e) {
