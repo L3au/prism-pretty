@@ -24,7 +24,7 @@ Features
 Change Log
 ---
 
-- v1.13.0
+- v1.12.2
   - fix js code detect
 
 - v1.12.1
