@@ -165,21 +165,22 @@ chrome.storage.sync.get(function (options) {
 });
 
 // fix github csp
-chrome.webRequest.onHeadersReceived.addListener(function(request) {
-    var headers = request.responseHeaders;
-    var csp = getHeader('content-security-policy', headers);
-
-    if (csp.value) {
-        headers.splice(csp.index, 1);
-
-        return {
-            responseHeaders: headers
-        }
-    }
-}, {
-    urls: ['*://*.githubusercontent.com/*'],
-    types: ['main_frame']
-}, ['responseHeaders', 'blocking']);
+// TODO disable this feature temp. for https://www.v2ex.com/t/164225#reply26
+//chrome.webRequest.onHeadersReceived.addListener(function(request) {
+//    var headers = request.responseHeaders;
+//    var csp = getHeader('content-security-policy', headers);
+//
+//    if (csp.value) {
+//        headers.splice(csp.index, 1);
+//
+//        return {
+//            responseHeaders: headers
+//        }
+//    }
+//}, {
+//    urls: ['*://*.githubusercontent.com/*'],
+//    types: ['main_frame']
+//}, ['responseHeaders', 'blocking']);
 
 var cacheHeaders;
 // cache response headers

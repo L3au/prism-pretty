@@ -275,6 +275,10 @@
                 // load Droid Sans font
                 document.head.insertAdjacentHTML('beforeend', global_style);
 
+                // githubusercontent csp warning
+                if (document.domain == 'raw.githubusercontent.com') {
+                    console.info('Prism Pretty: please ignore csp warning...╮(￣▽￣)╭');
+                }
 
                 // headers fade
                 var headerEl = $('.request-headers');
