@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Prism Pretty",
-    "version": "1.12.3",
+    "version": "1.12.4",
     "author": "L3au",
     "description": "A Chrome Extension to format/highlight/preview HTML/JS/CSS/Markdown code with Prism.js",
     "minimum_chrome_version": "31.0.1650.8",
