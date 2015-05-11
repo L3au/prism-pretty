@@ -1,5 +1,11 @@
 (function () {
     var rootEl = document.documentElement;
+    var global_options, global_headers;
+
+    var fontSrc = chrome.runtime.getURL('css/droid-sans-mono.woff2');
+    var global_style = '@font-face{font-family:"Droid Sans Mono";src:url("fontSrc") format("woff2");}';
+
+    global_style = '<style>' + global_style.replace('fontSrc', fontSrc) + '</style>';
 
     function $(v, c) {
         return (c || document).querySelector(v);
@@ -41,6 +47,7 @@
         script.textContent = 'try{' + content + '}catch(e){}';
 
         document.head.appendChild(script);
+
         script.remove();
         script = null;
     }
@@ -68,24 +75,12 @@
         return docType + '\n' + rootEl.outerHTML;
     }
 
-    var global_options, global_headers;
-
-    var fontSrc = chrome.runtime.getURL('css/droid-sans-mono.woff2');
-    var global_style = '@font-face{font-family:"Droid Sans Mono";src:url("fontSrc") format("woff2");}';
-
-    global_style = '<style>' + global_style.replace('fontSrc', fontSrc) + '</style>';
-
     var promises = [
         (function () {
             return new Promise(function (resolve, reject) {
                 chrome.runtime.sendMessage({
                     action: 'requestHeaders'
                 }, function (headers) {
-                    if (!global_options.enabled) {
-                        reject();
-                        return;
-                    }
-
                     global_headers = headers;
                     rootEl = document.documentElement;
 
@@ -119,6 +114,10 @@
 
             chrome.storage.sync.get(function (options) {
                 global_options = options;
+
+                if (!options.enabled) {
+                    return;
+                }
 
                 Promise.all(promises.map(function (p) {
                     return p();
