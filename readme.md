@@ -24,6 +24,10 @@ Features
 Change Log
 ---
 
+- v1.12.4
+  - rm github csp alteration
+  - change enabled adjust
+
 - v1.12.2
   - fix js code detect
 
