@@ -6,8 +6,6 @@ Install
 ---
 [Chrome Web Store](https://chrome.google.com/webstore/detail/prism-pretty/hjjcdjnncffbbhlglkipjhljmocnehim)
 
----
-
 ![](img/screenshot.png)
 
 Features
@@ -25,7 +23,7 @@ Features
 Change Log
 ---
 
-- v1.12.8
+- v1.12.10
   - many many bugs fixed...
 
 - v1.12.4

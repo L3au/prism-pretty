@@ -179,6 +179,7 @@ chrome.webRequest.onResponseStarted.addListener(function (request) {
     types: ['main_frame']
 }, ['responseHeaders']);
 
+// response headers
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     var url    = sender.url;
     var action = request.action;
@@ -190,6 +191,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
 });
 
+// update readme
 chrome.runtime.onInstalled.addListener(function (details) {
     if (details.reason == 'install' || details.reason == 'update') {
         chrome.tabs.create({

@@ -93,7 +93,7 @@
         $('.help').addClass('help-' + (lang ? 'zh' : 'en' ));
     });
 
-    form.on('change', function (e) {
+    form.on('change', function () {
         changeBtnStatus();
     });
 

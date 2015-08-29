@@ -36,6 +36,7 @@ function template(str) {
     }
 }
 
+// pretty content
 function prettyWorker(data) {
     var defer = Promise.defer();
 
