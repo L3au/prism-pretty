@@ -44,8 +44,11 @@ h1 {
 .help > li {
   margin-left: 10px;
 }
-.help .github:before {
-  content: 'Github';
+.help .github {
+  color: #e74c3c;
+}
+.help .github:hover {
+  color: #d62c1a;
 }
 .help-en .reviews:before {
   content: 'Reviews :)';
@@ -176,6 +179,8 @@ textarea {
   margin-bottom: 15px;
   padding: 8px;
   font-size: 15px;
+  -webkit-transition-property: color, border-color;
+  transition-property: color, border-color;
 }
 .options-form .bootstrap-switch-on:not(.bootstrap-switch-disabled):hover + small {
   opacity: 1;

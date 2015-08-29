@@ -2,7 +2,7 @@
     var rootEl = document.documentElement;
     var global_options, global_headers;
 
-    var fontSrc = chrome.runtime.getURL('css/droid-sans-mono.woff2');
+    var fontSrc      = chrome.runtime.getURL('css/droid-sans-mono.woff2');
     var global_style = '@font-face{font-family:"Droid Sans Mono";src:url("fontSrc") format("woff2");}';
 
     global_style = '<style>' + global_style.replace('fontSrc', fontSrc) + '</style>';
@@ -49,7 +49,7 @@
         document.head.appendChild(script);
 
         script.remove();
-        script = null;
+        script             = null;
     }
 
     function detectCSS(content) {
@@ -65,7 +65,7 @@
         }
 
         style.remove();
-        style = null;
+        style             = null;
 
         return type;
     }
@@ -82,7 +82,7 @@
                     action: 'requestHeaders'
                 }, function (headers) {
                     global_headers = headers;
-                    rootEl = document.documentElement;
+                    rootEl         = document.documentElement;
 
                     if (headers.type == 'markdown') {
                         global_options.theme = 'markdown';
@@ -122,7 +122,7 @@
                 Promise.all(promises.map(function (p) {
                     return p();
                 })).then(function () {
-                    if (!self.prettifyContent()) {
+                    if (!self.parseContent()) {
                         unloading();
                     }
                 });
@@ -144,12 +144,12 @@
                     }
 
                     // pretty html
-                    self.sendPrettyMsg('html', '');
+                    self.prettyCode('html');
                 }
             });
         },
 
-        prettifyContent: function () {
+        parseContent: function () {
             var content;
             var body = document.body;
 
@@ -159,7 +159,7 @@
             }
 
             var children = body.children;
-            var pre = children[0];
+            var pre      = children[0];
 
             if (children.length == 0) {
                 content = body.textContent.trim();
@@ -181,10 +181,14 @@
                     type = 'json';
                 } catch (e) {
                     try {
+                        // remove node shebang
+                        content = content.replace(/^#!.*/, '');
+
                         new Function(content);
+
                         type = 'js';
 
-                        if (/^\s*[\w\-\$]+\(\{/.test(content)) {
+                        if (/^\s*[\w\$]+\s*\(/i.test(content)) {
                             type = 'jsonp';
                         }
                     } catch (e) {
@@ -197,8 +201,10 @@
                 return;
             }
 
+            loading();
+
             var tmpType = type;
-            var types = global_options.formatTypes;
+            var types   = global_options.formatTypes;
 
             if (tmpType == 'json' || tmpType == 'jsonp') {
                 tmpType = 'js';
@@ -225,40 +231,38 @@
                 execScript(script);
             }
 
-            this.sendPrettyMsg(type, content);
+            this.prettyCode(type, content);
 
             return true;
         },
 
-        sendPrettyMsg: function (type, content) {
+        prettyCode: function (type, content) {
             var options = global_options;
             var headers = global_headers;
 
             loading();
 
-            chrome.runtime.sendMessage({
-                action: 'prettify',
-                type: type,
-                content: content,
-                headers: headers.headers,
-                options: options
-            }, function (response) {
+            // fix loading paint
+            setTimeout(function () {
+                var promise = prettyWorker({
+                    type    : type,
+                    content : content,
+                    headers : headers.headers,
+                    options : options,
+                    url     : location.href,
+                    language: navigator.language
+                });
+
+                promise.then(handler, unloading);
+            }, 1000 / 60);
+
+            function handler(response) {
                 if (!response) {
                     unloading();
                     return;
                 }
 
-                if (response.timeout) {
-                    unloading();
-                    addClass('prism-pretty-too-large');
-
-                    setTimeout(function () {
-                        removeClass('prism-pretty-too-large');
-                    }, 2500);
-                    return;
-                }
-
-                var title = document.title;
+                var title     = document.title;
                 var className = 'prism-pretty';
 
                 className += ' pretty-theme-' + options.theme;
@@ -284,7 +288,7 @@
                 if (headerEl) {
                     setTimeout(function () {
                         headerEl.style.opacity = 0;
-                    }, 5000);
+                    }, 3000);
                 }
 
                 // preview css
@@ -322,7 +326,8 @@
                         }, 100);
                     }
                 }
-            });
+            }
+
         }
     };
 

@@ -2,18 +2,6 @@ function toDate(s) {
     return Date.parse(s) ? new Date(s).toJSON().replace(/T|\.\d+Z$/g, ' ').trim() : s;
 }
 
-function copy(content) {
-    var textarea = document.createElement('textarea');
-
-    textarea.value = content;
-    document.body.appendChild(textarea);
-
-    textarea.select();
-
-    document.execCommand('copy');
-    textarea.remove();
-}
-
 function getHeader(name, headers) {
     var ret = {};
 
@@ -31,13 +19,13 @@ function getHeader(name, headers) {
 }
 
 function processResponseHeaders(headers, url) {
-    var rules = {
-        'css': /\.css(?:[\?#]|$)/i,
-        'js': /\.js(?:[\?#]|$)/i,
+    var rules     = {
+        'css'     : /\.css(?:[\?#]|$)/i,
+        'js'      : /\.js(?:[\?#]|$)/i,
         'markdown': /\.(md|markdown)(?:[\?#]|$)/i,
-        'json': /\.(json|do)(?:[\?#]|$)/i,
-        'jsonp': /[\?&](callback|jsonpcallback)=/i,
-        '': /$^/
+        'json'    : /\.(json|do)(?:[\?#]|$)/i,
+        'jsonp'   : /[\?&](callback|jsonpcallback)=/i,
+        ''        : /$^/
     };
     var mineTypes = [
         'text/css',
@@ -51,10 +39,12 @@ function processResponseHeaders(headers, url) {
     var contentType = getHeader('content-type', headers).value || '';
 
     for (type in rules) {
-        var reg = rules[type];
+        if (rules.hasOwnProperty(type)) {
+            var reg = rules[type];
 
-        if (reg.test(url)) {
-            break;
+            if (reg.test(url)) {
+                break;
+            }
         }
     }
 
@@ -73,7 +63,7 @@ function processResponseHeaders(headers, url) {
     }
 
     headers = headers.map(function (header) {
-        var name = header.name;
+        var name  = header.name;
         var value = header.value;
 
         switch (name.toLowerCase()) {
@@ -90,13 +80,13 @@ function processResponseHeaders(headers, url) {
         }
 
         return {
-            name: name,
+            name : name,
             value: value
         }
     });
 
     return {
-        type: type,
+        type   : type,
         headers: headers
     };
 }
@@ -116,9 +106,9 @@ function setOptions(options, keep) {
         // enable html pretty
         if (~options.formatTypes.indexOf('html')) {
             chrome.contextMenus.create({
-                id: 'PrettyPageSource',
-                type: 'normal',
-                title: 'Pretty Page Source',
+                id      : 'PrettyPageSource',
+                type    : 'normal',
+                title   : 'Pretty Page Source',
                 contexts: ['page']
             });
         }
@@ -133,7 +123,7 @@ function setOptions(options, keep) {
 
     if (!keep) {
         chrome.tabs.reload({
-            bypassCache: true
+            bypassCache: false
         });
     }
 }
@@ -149,14 +139,14 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
 chrome.storage.sync.get(function (options) {
     if (!options || Object.keys(options).length !== 9) {
         options = {
-            enabled: true,
-            theme: 'dabblet',
-            fontSize: '14px',
-            indent: 4,
-            customCSS: '',
-            headers: true,
-            unicode: true,
-            bugFree: false,
+            enabled    : true,
+            theme      : 'dabblet',
+            fontSize   : '14px',
+            indent     : 4,
+            customCSS  : '',
+            headers    : true,
+            unicode    : true,
+            bugFree    : false,
             formatTypes: ['js', 'css', 'markdown']
         };
     }
@@ -164,86 +154,47 @@ chrome.storage.sync.get(function (options) {
     setOptions(options, true);
 });
 
-// fix github csp
-// TODO disable this feature temp. for https://www.v2ex.com/t/164225#reply26
-//chrome.webRequest.onHeadersReceived.addListener(function(request) {
-//    var headers = request.responseHeaders;
-//    var csp = getHeader('content-security-policy', headers);
-//
-//    if (csp.value) {
-//        headers.splice(csp.index, 1);
-//
-//        return {
-//            responseHeaders: headers
-//        }
-//    }
-//}, {
-//    urls: ['*://*.githubusercontent.com/*'],
-//    types: ['main_frame']
-//}, ['responseHeaders', 'blocking']);
-
-var cacheHeaders;
 // cache response headers
+var cacheHeaders = {};
 chrome.webRequest.onResponseStarted.addListener(function (request) {
-    var url = request.url;
+    var url     = request.url;
     var headers = request.responseHeaders;
 
-    var ip = request.ip;
+    var ip     = request.ip;
     var status = request.statusLine;
 
     if (ip) {
         headers.splice(0, 0, {
-            name: 'Status Line',
+            name : 'Status Line',
             value: status
         }, {
-            name: 'Remote Address',
+            name : 'Remote Address',
             value: ip
         });
     }
 
-    cacheHeaders = processResponseHeaders(headers, url);
+    cacheHeaders[url] = processResponseHeaders(headers, url);
 }, {
-    urls: ['<all_urls>'],
+    urls : ['<all_urls>'],
     types: ['main_frame']
 }, ['responseHeaders']);
 
-
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    var url = sender.url;
+    var url    = sender.url;
     var action = request.action;
 
     if (action == 'requestHeaders') {
-        sendResponse(cacheHeaders || processResponseHeaders([], url));
-        cacheHeaders = null;
+        sendResponse(cacheHeaders[url] || processResponseHeaders([], url));
+        console.log(cacheHeaders[url]);
+        delete cacheHeaders[url];
     }
+});
 
-    if (action == 'prettify') {
-        var worker = new Worker('worker.js');
-
-        worker.onerror = function () {
-            worker.done = true;
-            worker.terminate();
-            sendResponse();
-        };
-        worker.onmessage = function (event) {
-            worker.done = true;
-            worker.terminate();
-            sendResponse(event.data);
-        };
-
-        request.url = url;
-        request.language = navigator.language;
-
-        worker.postMessage(request);
-
-        setTimeout(function () {
-            worker.terminate();
-            worker = null;
-            sendResponse({
-                timeout: true
-            });
-        }, 5555);
+chrome.runtime.onInstalled.addListener(function (details) {
+    if (details.reason == 'install' || details.reason == 'update') {
+        chrome.tabs.create({
+            url   : chrome.runtime.getURL('readme.html'),
+            active: true
+        });
     }
-
-    return true;
 });

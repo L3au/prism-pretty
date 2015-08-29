@@ -65,8 +65,12 @@ h1 {
         margin-left: 10px;
     }
 
-    .github:before {
-        content: 'Github';
+    .github {
+        color: #e74c3c;
+
+        &:hover {
+            color: darken(#e74c3c, 10%);
+        }
     }
 }
 
@@ -228,6 +232,8 @@ textarea {
         margin-bottom: 15px;
         padding: 8px;
         font-size: 15px;
+        -webkit-transition-property: color, border-color;
+        transition-property: color, border-color;
     }
 
     .bootstrap-switch-on:not(.bootstrap-switch-disabled):hover + small {

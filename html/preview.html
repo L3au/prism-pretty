@@ -941,7 +941,7 @@
     $$('.attr-name').forEach(function (item) {
         var name = item.textContent;
 
-        if (name == 'href' || name == 'src') {
+        if (['src', 'href', 'data-src', 'data-href'].indexOf(name) > -1) {
             var node = item.nextElementSibling;
             var childNodes = node.childNodes;
 
