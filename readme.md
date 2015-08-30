@@ -8,6 +8,11 @@ Install
 
 ![](img/screenshot.png)
 
+Allow local files
+---
+
+![](img/allow-file-urls.png)
+
 Features
 ---
 - Precise detect
@@ -23,8 +28,8 @@ Features
 Change Log
 ---
 
-- v1.12.10
-  - many many bugs fixed...
+- v1.12.12
+  - features improved...
 
 - v1.12.4
   - rm github csp alteration
