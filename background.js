@@ -128,6 +128,7 @@ function setOptions(options, keep) {
     }
 }
 
+// click right context menu
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
     var tabId = tab.id;
 
@@ -136,6 +137,7 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
     });
 });
 
+// init options
 chrome.storage.sync.get(function (options) {
     if (!options || Object.keys(options).length !== 9) {
         options = {
@@ -163,6 +165,11 @@ chrome.webRequest.onResponseStarted.addListener(function (request) {
     var ip     = request.ip;
     var status = request.statusLine;
 
+    // filter chrome-extensions
+    if (url.indexOf('chrome-extension://') == 0) {
+        return;
+    }
+
     if (ip) {
         headers.splice(0, 0, {
             name : 'Status Line',
@@ -179,16 +186,48 @@ chrome.webRequest.onResponseStarted.addListener(function (request) {
     types: ['main_frame']
 }, ['responseHeaders']);
 
-// response headers
+// message listener
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     var url    = sender.url;
+    var tabId  = sender.tab.id;
     var action = request.action;
 
     if (action == 'requestHeaders') {
         sendResponse(cacheHeaders[url] || processResponseHeaders([], url));
-        console.log(cacheHeaders[url]);
-        delete cacheHeaders[url];
     }
+
+    // clear headers cache
+    delete cacheHeaders[url];
+
+    if (action == 'insertCss') {
+        chrome.tabs.insertCSS(tabId, {
+            runAt: 'document_start',
+            file : "css/prism.css"
+        });
+    }
+
+    if (action == 'prettify') {
+        var worker = new Worker('worker.js');
+
+        worker.onerror   = function (e) {
+            console.error(e);
+            worker.terminate();
+            worker = null;
+            sendResponse();
+        };
+        worker.onmessage = function (e) {
+            worker.terminate();
+            worker = null;
+            sendResponse(e.data);
+        };
+
+        request.url      = url;
+        request.language = navigator.language;
+
+        worker.postMessage(request);
+    }
+
+    return true;
 });
 
 // update readme

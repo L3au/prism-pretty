@@ -1,29 +1,14 @@
-
-
-/* **********************************************
- Begin prism-core.js
- ********************************************** */
-
-var _self = (typeof window !== 'undefined')
-    ? window   // if in browser
-    : (
-    (typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope)
-        ? self // if in worker
-        : {}   // if in node js
-);
-
 /**
  * Prism: Lightweight, robust, elegant syntax highlighting
  * MIT license http://www.opensource.org/licenses/mit-license.php/
  * @author Lea Verou http://lea.verou.me
  */
-
 var Prism = (function(){
 
 // Private helper vars
     var lang = /\blang(?:uage)?-(?!\*)(\w+)\b/i;
 
-    var _ = _self.Prism = {
+    var _ = self.Prism = {
         util: {
             encode: function (tokens) {
                 if (tokens instanceof Token) {
@@ -194,7 +179,7 @@ var Prism = (function(){
 
             _.hooks.run('before-highlight', env);
 
-            if (async && _self.Worker) {
+            if (async && self.Worker) {
                 var worker = new Worker(_.filename);
 
                 worker.onmessage = function(evt) {
@@ -228,7 +213,9 @@ var Prism = (function(){
             }
         },
 
-        highlight: function (text, grammar, language) {
+        highlight: function (text, grammar, language, isUnicode) {
+            _.isUnicode = !!isUnicode;
+
             var tokens = _.tokenize(text, grammar);
             return Token.stringify(_.util.encode(tokens), language);
         },
@@ -373,6 +360,10 @@ var Prism = (function(){
             env.attributes['spellcheck'] = 'true';
         }
 
+        if (_.isUnicode && (env.type == 'string' || env.type == 'comment')) {
+            env.content = unescape(env.content.replace(/\\u/g, "%u"));
+        }
+
         if (o.alias) {
             var aliases = _.util.type(o.alias) === 'Array' ? o.alias : [o.alias];
             Array.prototype.push.apply(env.classes, aliases);
@@ -390,38 +381,7 @@ var Prism = (function(){
 
     };
 
-    if (!_self.document) {
-        if (!_self.addEventListener) {
-            // in Node.js
-            return _self.Prism;
-        }
-        // In worker
-        _self.addEventListener('message', function(evt) {
-            var message = JSON.parse(evt.data),
-                lang = message.language,
-                code = message.code;
-
-            _self.postMessage(JSON.stringify(_.util.encode(_.tokenize(code, _.languages[lang]))));
-            _self.close();
-        }, false);
-
-        return _self.Prism;
-    }
-
-// Get current script and highlight
-    var script = document.getElementsByTagName('script');
-
-    script = script[script.length - 1];
-
-    if (script) {
-        _.filename = script.src;
-
-        if (document.addEventListener && !script.hasAttribute('data-manual')) {
-            document.addEventListener('DOMContentLoaded', _.highlightAll);
-        }
-    }
-
-    return _self.Prism;
+    return self.Prism;
 
 })();
 

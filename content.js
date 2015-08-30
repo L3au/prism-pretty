@@ -144,7 +144,7 @@
                     }
 
                     // pretty html
-                    self.prettyCode('html');
+                    self.sendPrettyMsg('html');
                 }
             });
         },
@@ -201,8 +201,6 @@
                 return;
             }
 
-            loading();
-
             var tmpType = type;
             var types   = global_options.formatTypes;
 
@@ -231,32 +229,29 @@
                 execScript(script);
             }
 
-            this.prettyCode(type, content);
+            this.sendPrettyMsg(type, content);
 
             return true;
         },
 
-        prettyCode: function (type, content) {
+        sendPrettyMsg: function (type, content) {
             var options = global_options;
             var headers = global_headers;
 
             loading();
 
-            // fix loading paint
-            setTimeout(function () {
-                var promise = prettyWorker({
-                    type    : type,
-                    content : content,
-                    headers : headers.headers,
-                    options : options,
-                    url     : location.href,
-                    language: navigator.language
-                });
+            chrome.runtime.sendMessage({
+                type   : type,
+                action : 'insertCss'
+            });
 
-                promise.then(handler, unloading);
-            }, 1000 / 60);
-
-            function handler(response) {
+            chrome.runtime.sendMessage({
+                action : 'prettify',
+                type   : type,
+                content: content,
+                headers: headers.headers,
+                options: options
+            }, function (response) {
                 if (!response) {
                     unloading();
                     return;
@@ -318,11 +313,10 @@
                     if (anchor) {
                         setTimeout(function () {
                             window.scrollTo(0, anchor.getBoundingClientRect().top - 10);
-                        }, 100);
+                        });
                     }
                 }
-            }
-
+            });
         }
     };
 

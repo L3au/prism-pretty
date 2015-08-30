@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Prism Pretty",
-    "version": "1.12.10",
+    "version": "1.12.12",
     "author": "L3au",
     "description": "A Chrome Extension to format/highlight/preview HTML/JS/CSS/Markdown code with Prism.js",
     "minimum_chrome_version": "31.0.1650.8",
@@ -21,8 +21,7 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "css": ["css/prism.css"],
-            "js": ["content.js", "js/codebeautify.js", "js/prism.js", "js/pretty-worker.js"],
+            "js": ["content.js"],
             "run_at": "document_start"
         }
     ],
