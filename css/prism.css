@@ -848,6 +848,16 @@ html.prism-pretty.pretty-theme-markdown .language-pretty .xml .php,
 html.prism-pretty.pretty-theme-markdown .language-pretty .php .xml {
   opacity: 0.5;
 }
+@media screen and (max-width: 1024px) {
+  html.prism-pretty.pretty-theme-markdown .language-pretty {
+    width: 80%;
+  }
+}
+@media screen and (max-width: 640px) {
+  html.prism-pretty.pretty-theme-markdown .language-pretty {
+    width: 95%;
+  }
+}
 html.prism-pretty body {
   margin: 0;
 }
