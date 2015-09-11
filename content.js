@@ -182,9 +182,7 @@
                 } catch (e) {
                     try {
                         // remove node shebang
-                        content = content.replace(/^#!.*/, '');
-
-                        new Function(content);
+                        new Function(content.replace(/^#!.*/, ''));
 
                         type = 'js';
 
@@ -241,8 +239,8 @@
             loading();
 
             chrome.runtime.sendMessage({
-                type   : type,
-                action : 'insertCss'
+                type  : type,
+                action: 'insertCss'
             });
 
             chrome.runtime.sendMessage({
@@ -263,7 +261,9 @@
                 className += ' pretty-theme-' + options.theme;
                 className += ' pretty-size-' + options.fontSize;
 
-                rootEl.innerHTML = '<head></head><body>' + response + '</body>';
+                var meta = '<meta name="viewport" content="width=device-width,initial-scale=1">';
+
+                rootEl.innerHTML = '<head>' + meta + '</head><body>' + response + '</body>';
                 rootEl.className = className;
 
                 if (title) {
