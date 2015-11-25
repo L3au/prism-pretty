@@ -49,7 +49,6 @@
         document.head.appendChild(script);
 
         script.remove();
-        script             = null;
     }
 
     function detectCSS(content) {
@@ -65,7 +64,6 @@
         }
 
         style.remove();
-        style             = null;
 
         return type;
     }
@@ -150,8 +148,9 @@
         },
 
         parseContent: function () {
-            var content;
+            var content = '';
             var body = document.body;
+            var type = global_headers.type;
 
             // fix somehow xxx...
             if (!body) {
@@ -161,19 +160,17 @@
             var children = body.children;
             var pre      = children[0];
 
-            if (children.length == 0) {
-                content = body.textContent.trim();
+            if (type) {
+                content = body.textContent;
+            } else {
+                if (pre && pre.nodeName == 'PRE') {
+                    content = pre.textContent;
+                }
             }
 
-            if (children.length == 1 && pre.nodeName == 'PRE') {
-                content = pre.textContent.trim();
-            }
-
-            if (!content) {
+            if (!content.trim()) {
                 return;
             }
-
-            var type = global_headers.type;
 
             if (!type) {
                 try {

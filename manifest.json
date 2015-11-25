@@ -10,7 +10,6 @@
         "<all_urls>",
         "storage",
         "webRequest",
-        "webRequestBlocking",
         "contextMenus"
     ],
     "update_url": "http://clients2.google.com/service/update2/crx",

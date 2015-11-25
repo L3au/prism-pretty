@@ -142,6 +142,38 @@ self.onmessage = function (event) {
                             text + '</h' + level + '>';
                     };
 
+                    renderer.code     = function (code, language) {
+                        var html;
+
+                        language = language || '';
+
+                        if (language) {
+                            html = hljs.highlight(language, code, true).value;
+                        } else {
+                            html = hljs.highlightAuto(code).value;
+                        }
+
+                        return '<pre class="hljs"><code>' + html + '</code></pre>';
+                    };
+                    renderer.listitem = function (text) {
+                        if (/^\s*\[[x ]\]\s*/.test(text)) {
+                            text = text
+                                .replace(/^\s*\[ \]\s*/, '<input type="checkbox" disabled>')
+                                .replace(/^\s*\[x\]\s*/, '<input type="checkbox" disabled checked> ');
+                            return '<li>' + text + '</li>';
+                        } else {
+                            return '<li>' + text + '</li>';
+                        }
+                    };
+
+                    marked.setOptions({
+                        renderer: renderer,
+                        breaks: true,
+                        pedantic: true,
+                        smartLists: true,
+                        smartypants: true
+                    });
+
                     marked.setOptions({
                         renderer : renderer,
                         highlight: function (code) {
