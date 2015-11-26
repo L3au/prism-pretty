@@ -5,7 +5,7 @@ function toDate(s) {
 function getHeader(name, headers) {
     var ret = '';
 
-    headers.some(function (header, index) {
+    headers.some(function (header) {
         if (header.name.toLowerCase() == name.toLowerCase()) {
             ret = header.value.toLowerCase();
             return true;
@@ -15,48 +15,41 @@ function getHeader(name, headers) {
     return ret;
 }
 
+function parseUrl(href) {
+    var url = {};
+    try {
+        url = new (window.URL || window.webkitURL)(href);
+    } catch (e) {}
+
+    return url;
+}
+
 function processResponseHeaders(headers, url) {
-    var rules     = {
-        'css'     : /\.css(?:[\?#]|$)/i,
-        'js'      : /\.js(?:[\?#]|$)/i,
-        'markdown': /\.(md|markdown)(?:[\?#]|$)/i,
-        'json'    : /\.(json|do)(?:[\?#]|$)/i,
-        'jsonp'   : /[\?&](callback|jsonpcallback)=/i,
-        ''        : /$^/
+    var mineTypes = {
+        'text/css'                : 'css',
+        'text/javascript'         : 'js',
+        'application/javascript'  : 'js',
+        'application/x-javascript': 'js',
+        'application/json'        : 'json'
     };
-    var mineTypes = [
-        'text/css',
-        'text/javascript',
-        'application/javascript',
-        'application/x-javascript',
-        'application/json'
-    ];
 
     var type;
     var contentType = getHeader('content-type', headers);
 
-    for (type in rules) {
-        if (rules.hasOwnProperty(type)) {
-            var reg = rules[type];
-
-            if (reg.test(url)) {
+    for (var mineType in mineTypes) {
+        if (mineTypes.hasOwnProperty(mineType)) {
+            if (contentType.indexOf(mineType) != -1) {
+                type = mineTypes[mineType];
                 break;
             }
         }
     }
 
-    var isProperType = mineTypes.some(function (mineType) {
-        if (type == 'markdown') {
-            return true;
-        }
+    url = parseUrl(url);
 
-        if (contentType.indexOf(mineType) !== -1) {
-            return true;
-        }
-    });
-
-    if (!type || !isProperType) {
-        type = false;
+    if (/\.(md|markdown)(?:[\?#]|$)/i.test(url.pathname) &&
+        (url.protocol == 'file:' || contentType.indexOf('text/plain') != -1)) {
+        type = 'markdown';
     }
 
     headers = headers.map(function (header) {
@@ -156,16 +149,18 @@ chrome.storage.sync.get(function (options) {
 // cache response headers
 var cacheHeaders = {};
 chrome.webRequest.onResponseStarted.addListener(function (request) {
-    var url     = request.url;
+    var url = request.url;
+
+    // filter chrome protocol
+    if (url.indexOf('chrome') == 0) {
+        return;
+    }
+
+    var tabId   = request.tabId;
     var headers = request.responseHeaders;
 
     var ip     = request.ip;
     var status = request.statusLine;
-
-    // filter chrome-extensions
-    if (url.indexOf('chrome-extension://') == 0) {
-        return;
-    }
 
     if (ip) {
         headers.splice(0, 0, {
@@ -177,7 +172,7 @@ chrome.webRequest.onResponseStarted.addListener(function (request) {
         });
     }
 
-    cacheHeaders[url] = processResponseHeaders(headers, url);
+    cacheHeaders[tabId] = processResponseHeaders(headers, url);
 }, {
     urls : ['<all_urls>'],
     types: ['main_frame']
@@ -188,12 +183,16 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     var url    = sender.url;
     var action = request.action;
 
-    if (action == 'requestHeaders') {
-        sendResponse(cacheHeaders[url] || processResponseHeaders([], url));
+    // clean cache headers
+    var tab = sender.tab || {};
 
-        // clear headers cache
-        return delete cacheHeaders[url];
+    if (action == 'requestHeaders') {
+        sendResponse(cacheHeaders[tab.id] || processResponseHeaders([], url));
     }
+
+    try {
+        delete cacheHeaders[tab.id];
+    } catch (e) {}
 
     if (action == 'prettify') {
         var worker = new Worker('worker.js');
