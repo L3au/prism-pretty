@@ -68,15 +68,6 @@
         return type;
     }
 
-    function getFontStyle() {
-        var fontSrc   = chrome.runtime.getURL('css/droid-sans-mono.woff2');
-        var fontStyle = '@font-face{font-family:"Droid Sans Mono";src:url("fontSrc") format("woff2");}';
-
-        fontStyle = '<style>' + fontStyle.replace('fontSrc', fontSrc) + '</style>';
-
-        return fontStyle;
-    }
-
     function App() {
         this.init();
     }
@@ -265,10 +256,14 @@
                 className += ' pretty-theme-' + options.theme;
                 className += ' pretty-size-' + options.fontSize;
 
-                var font = getFontStyle();
                 var meta = '<meta name="viewport" content="width=device-width,initial-scale=1">';
 
-                rootEl.innerHTML = '<head>' + meta + font + '</head><body>' + response + '</body>';
+                var fontSrc   = chrome.runtime.getURL('css/droid-sans-mono.woff2');
+                var fontStyle = '@font-face{font-family:"Droid Sans Mono";src:url("fontSrc") format("woff2");}';
+
+                fontStyle = '<style>' + fontStyle.replace('fontSrc', fontSrc) + '</style>';
+
+                rootEl.innerHTML = '<head>' + meta + fontStyle + '</head><body>' + response + '</body>';
                 rootEl.className = className;
 
                 if (title) {

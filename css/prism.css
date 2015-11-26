@@ -647,6 +647,7 @@
   margin-left: auto;
   margin-right: auto;
   padding-left: 0;
+  white-space: normal;
   font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
 .pretty-theme-markdown .language-pretty a {
@@ -924,7 +925,9 @@
 .pretty-theme-markdown .language-pretty ul,
 .pretty-theme-markdown .language-pretty ol {
   margin-top: 0;
+  margin-left: 20px;
   margin-bottom: 10.5px;
+  padding-left: 0;
   white-space: normal;
 }
 .pretty-theme-markdown .language-pretty ul > li,

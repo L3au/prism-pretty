@@ -3,14 +3,11 @@ function toDate(s) {
 }
 
 function getHeader(name, headers) {
-    var ret = {};
+    var ret = '';
 
     headers.some(function (header, index) {
         if (header.name.toLowerCase() == name.toLowerCase()) {
-            ret = {
-                index: index,
-                value: header.value.toLowerCase()
-            };
+            ret = header.value.toLowerCase();
             return true;
         }
     });
@@ -36,7 +33,7 @@ function processResponseHeaders(headers, url) {
     ];
 
     var type;
-    var contentType = getHeader('content-type', headers).value || '';
+    var contentType = getHeader('content-type', headers);
 
     for (type in rules) {
         if (rules.hasOwnProperty(type)) {
