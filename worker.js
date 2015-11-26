@@ -205,9 +205,9 @@ self.onmessage = function (event) {
                     renderer.listitem = function (text) {
                         if (/^\s*\[[x ]\]\s*/.test(text)) {
                             text = text
-                                .replace(/^\s*\[ \]\s*/, '<input type="checkbox">')
+                                .replace(/^\s*\[\s*\]\s*/, '<input type="checkbox"> ')
                                 .replace(/^\s*\[x\]\s*/, '<input type="checkbox" checked> ');
-                            return '<li>' + text + '</li>';
+                            return '<li><label>' + text + '</label></li>';
                         } else {
                             return '<li>' + text + '</li>';
                         }
