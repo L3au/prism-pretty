@@ -189,21 +189,13 @@ chrome.webRequest.onResponseStarted.addListener(function (request) {
 // message listener
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     var url    = sender.url;
-    var tabId  = sender.tab.id;
     var action = request.action;
 
     if (action == 'requestHeaders') {
         sendResponse(cacheHeaders[url] || processResponseHeaders([], url));
-    }
 
-    // clear headers cache
-    delete cacheHeaders[url];
-
-    if (action == 'insertCss') {
-        chrome.tabs.insertCSS(tabId, {
-            runAt: 'document_start',
-            file : "css/prism.css"
-        });
+        // clear headers cache
+        return delete cacheHeaders[url];
     }
 
     if (action == 'prettify') {
@@ -225,17 +217,17 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         request.language = navigator.language;
 
         worker.postMessage(request);
-    }
 
-    return true;
+        return true;
+    }
 });
 
 // update readme
 chrome.runtime.onInstalled.addListener(function (details) {
     if (details.reason == 'install' || details.reason == 'update') {
-        chrome.tabs.create({
-            url   : chrome.runtime.getURL('readme.html'),
-            active: true
-        });
+        //chrome.tabs.create({
+        //    url   : chrome.runtime.getURL('README.md'),
+        //    active: true
+        //});
     }
 });

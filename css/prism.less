@@ -2,7 +2,7 @@
  * Prism Pretty theme
  * @author Leshu
  */
-html.prism-pretty {
+.prism-pretty {
     &:before {
         position: fixed;
         z-index: 999999999;
@@ -14,125 +14,6 @@ html.prism-pretty {
         visibility: visible;
         -webkit-transition: .3s ease;
         transition: .3s ease;
-    }
-    &.prism-pretty-spinner {
-        visibility: hidden !important;
-
-        > body {
-            display: none !important;
-        }
-
-        &:before {
-            content: '';
-            background: #fdfdfd data-uri('../img/spinner.svg') center no-repeat;
-            background-size: 20px;
-            opacity: 1;
-            visibility: visible;
-        }
-    }
-    &.prism-pretty-dabblet:before {
-        background-color: #f5f2f0;
-    }
-    &.prism-pretty-monokai:before {
-        background-color: #fdfdfd;
-    }
-    &.prism-pretty-coy:before {
-        background-color: #fdfdfd;
-    }
-    &.prism-pretty-markdown:before {
-        background-color: rgb(253, 253, 253);
-    }
-
-    &.pretty-theme-dabblet {
-        color: black;
-        // text-shadow: 0 1px white;
-        background: #f5f2f0 data-uri('../img/noise.png');
-
-        &::selection {
-            background-color: rgba(153, 122, 102, 0.5);
-            color: #fff;
-        }
-
-        .pretty-container {
-            background: #f5f2f0 data-uri('../img/noise.png');
-        }
-
-        .request-headers {
-            color: #666;
-        }
-
-        @import "dabblet";
-    }
-
-    &.pretty-theme-monokai {
-        background: #2a2a2a;
-        color: #76d9e6;
-        @import "monokai";
-
-        .pretty-container {
-            background-color: #2a2a2a;
-        }
-    }
-
-    &.pretty-theme-coy {
-        color: black;
-        // text-shadow: 0 1px white;
-        background-color: #fdfdfd;
-        // gradient这玩意真耗内存啊= =，还是老实用图片吧
-        // background-image: linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
-        background-image: data-uri('../img/coy.png');
-        background-size: 40px 40px;
-        background-origin: content-box;
-        box-sizing: border-box;
-
-        .pretty-container {
-//            background: inherit;
-//            background-color: #fdfdfd;
-//            background-image: data-uri('../img/coy.png');
-        }
-
-        .request-headers {
-            color: #666;
-        }
-
-        @import "coy";
-    }
-
-    &.pretty-size-13px {
-        font-size: 13px;
-        background-size: 32px 32px;
-    }
-    &.pretty-size-14px {
-        font-size: 14px;
-        background-size: 34px 34px;
-    }
-    &.pretty-size-15px {
-        font-size: 15px;
-        background-size: 36px 36px;
-    }
-
-    &.pretty-theme-markdown {
-        color: #2c3f51;
-        font-size: 16px;
-        line-height: 1.45;
-        word-wrap: break-word;
-        background-color: #fdfdfd;
-        font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
-
-        .language-pretty {
-            width: 60%;
-            margin-left: auto;
-            margin-right: auto;
-            @import "markdown";
-
-            @media screen and (max-width: 1024px) {
-                width: 80%;
-            }
-
-            @media screen and (max-width: 640px) {
-                width: 95%;
-            }
-        }
     }
 
     body {
@@ -221,42 +102,24 @@ html.prism-pretty {
         color: inherit;
     }
 
-    code[class*="language-"], pre[class*="language-"] {
-        font-family: Monaco, 'Droid Sans Mono', 'Andale Mono', monospace;
+    .language-pretty {
+        position: relative;
+        margin: 0;
+        padding-left: 3.8em;
         direction: ltr;
         text-align: left;
         white-space: pre;
         word-spacing: normal;
         word-break: normal;
+        word-wrap: normal;
         line-height: 1.25;
         tab-size: 4;
         -webkit-hyphens: none;
         -moz-hyphens: none;
         -ms-hyphens: none;
         hyphens: none;
-    }
-    pre[class*="language-"] {
-        position: relative;
-        margin: 0;
-        // overflow: hidden;
-        padding-left: 3.8em;
         counter-reset: linenumber;
-        white-space: pre;
-        word-wrap: normal;
-        counter-reset: linenumber;
-        /*&:before {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: .5em 0;
-            background: linear-gradient(#333333, #000000);
-            border-radius: 4px 4px 0 0;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-            font: bold 15px/1 sans-serif;
-            color: white;
-            text-indent: 1em;
-        }*/
+        font-family: Monaco, 'Droid Sans Mono', 'Andale Mono', monospace;
     }
     .line-numbers-rows {
         display: flex;
@@ -528,5 +391,132 @@ html.prism-pretty {
     }
     .url {
         cursor: pointer;
+    }
+}
+
+.prism-pretty-spinner {
+    visibility: hidden !important;
+
+    > body {
+        display: none !important;
+    }
+
+    &:before {
+        content: '';
+        background: #fdfdfd data-uri('../img/spinner.svg') center no-repeat;
+        background-size: 20px;
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+.prism-pretty-dabblet:before {
+    background-color: #f5f2f0;
+}
+
+.prism-pretty-monokai:before {
+    background-color: #fdfdfd;
+}
+
+.prism-pretty-coy:before {
+    background-color: #fdfdfd;
+}
+
+.prism-pretty-markdown:before {
+    background-color: rgb(253, 253, 253);
+}
+
+.pretty-theme-dabblet {
+    color: black;
+    // text-shadow: 0 1px white;
+    background: #f5f2f0 data-uri('../img/noise.png');
+
+    &::selection {
+        background-color: rgba(153, 122, 102, 0.5);
+        color: #fff;
+    }
+
+    .pretty-container {
+        background: #f5f2f0 data-uri('../img/noise.png');
+    }
+
+    .request-headers {
+        color: #666;
+    }
+
+    @import "dabblet";
+}
+
+.pretty-theme-monokai {
+    background: #2a2a2a;
+    color: #76d9e6;
+    @import "monokai";
+
+    .pretty-container {
+        background-color: #2a2a2a;
+    }
+}
+
+.pretty-theme-coy {
+    color: black;
+    // text-shadow: 0 1px white;
+    background-color: #fdfdfd;
+    // gradient这玩意真耗内存啊= =，还是老实用图片吧
+    // background-image: linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
+    background-image: data-uri('../img/coy.png');
+    background-size: 40px 40px;
+    background-origin: content-box;
+    box-sizing: border-box;
+
+    .pretty-container {
+        //            background: inherit;
+        //            background-color: #fdfdfd;
+        //            background-image: data-uri('../img/coy.png');
+    }
+
+    .request-headers {
+        color: #666;
+    }
+
+    @import "coy";
+}
+
+.pretty-size-13px {
+    font-size: 13px;
+    background-size: 32px 32px;
+}
+
+.pretty-size-14px {
+    font-size: 14px;
+    background-size: 34px 34px;
+}
+
+.pretty-size-15px {
+    font-size: 15px;
+    background-size: 36px 36px;
+}
+
+.pretty-theme-markdown {
+    color: #2c3f51;
+    line-height: 1.45;
+    word-wrap: break-word;
+    background-color: #fdfdfd;
+
+    .language-pretty {
+        width: 60%;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 0;
+        font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+
+        @import "markdown";
+
+        @media screen and (max-width: 1024px) {
+            width: 80%;
+        }
+
+        @media screen and (max-width: 640px) {
+            width: 95%;
+        }
     }
 }

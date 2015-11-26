@@ -212,17 +212,17 @@ h6 .small {
 
 h1,
 .h1 {
-    font-size: 39px
+    font-size: 34px
 }
 
 h2,
 .h2 {
-    font-size: 32px
+    font-size: 28px
 }
 
 h3,
 .h3 {
-    font-size: 26px
+    font-size: 22px
 }
 
 h4,
@@ -232,12 +232,12 @@ h4,
 
 h5,
 .h5 {
-    font-size: 15px
+    font-size: 16px
 }
 
 h6,
 .h6 {
-    font-size: 13px
+    font-size: 14px
 }
 
 h1,
@@ -248,7 +248,7 @@ h5,
 h6 {
     position: relative;
     font-weight: bold;
-    margin: 1.2em 0;
+    margin: 1em 0;
 
     &:hover > .anchor {
         opacity: 1;
@@ -257,6 +257,7 @@ h6 {
 }
 
 p {
+    font-size: 1.1em;
     margin: 0 0 10.5px
 }
 
@@ -274,8 +275,9 @@ code {
     color: #c7254e;
     background-color: #f9f2f4;
     border-radius: 4px;
-    font-size: .9em;
-    padding: 2px 4px;
+    font-size: 1em;
+    margin: 0 2px;
+    padding: 0 4px;
 }
 
 table {
@@ -314,7 +316,11 @@ table tbody+tbody {
 ul,
 ol {
     margin-top: 0;
-    margin-bottom: 10.5px
+    margin-bottom: 10.5px;
+
+    > li {
+        margin-bottom: 10px;
+    }
 }
 
 ul ul,
@@ -350,13 +356,8 @@ table thead:first-child tr:first-child th {
 blockquote {
     padding: 10.5px 21px;
     margin: 0 0 21px;
+    white-space: pre-wrap;
     border-left: 5px solid rgba(102, 128, 153, 0.075)
-}
-
-blockquote p {
-    font-size: 18.75px;
-    font-weight: 300;
-    line-height: 1.25
 }
 
 blockquote p:last-child {
@@ -421,13 +422,12 @@ blockquote {
     background-color: rgba(102, 128, 153, 0.05);
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    padding: 15px 20px
+    padding: 0 20px
 }
 
 blockquote p {
     margin-bottom: 1.1em;
-    font-size: 1em;
-    line-height: 1.45
+    line-height: 1.45;
 }
 
 blockquote ul:last-child,

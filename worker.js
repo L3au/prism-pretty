@@ -1,3 +1,52 @@
+var matchHtmlRegExp = /["'&<>]/;
+
+function escapeHtml(string) {
+    var str = '' + string;
+    var match = matchHtmlRegExp.exec(str);
+
+    if (!match) {
+        return str;
+    }
+
+    var escape;
+    var html = '';
+    var index = 0;
+    var lastIndex = 0;
+
+    for (index = match.index; index < str.length; index++) {
+        switch (str.charCodeAt(index)) {
+            case 34: // "
+                escape = '&quot;';
+                break;
+            case 38: // &
+                escape = '&amp;';
+                break;
+            case 39: // '
+                escape = '&#39;';
+                break;
+            case 60: // <
+                escape = '&lt;';
+                break;
+            case 62: // >
+                escape = '&gt;';
+                break;
+            default:
+                continue;
+        }
+
+        if (lastIndex !== index) {
+            html += str.substring(lastIndex, index);
+        }
+
+        lastIndex = index + 1;
+        html += escape;
+    }
+
+    return lastIndex !== index
+        ? html + str.substring(lastIndex, index)
+        : html;
+}
+
 function template(str) {
     var strArr = [
         '<div class="request-headers">',
@@ -134,18 +183,15 @@ self.onmessage = function (event) {
                     var renderer = new marked.Renderer();
 
                     renderer.heading = function (text, level) {
-                        var escapedText = escape(text.toLowerCase().trim().replace(/\s+/g, '-'));
+                        var escapedText = escapeHtml(text.replace(/\s+/g, ''));
 
-                        return '<h' + level + '><a id="' + escapedText +
-                            '" class="anchor" href="#' + escapedText +
+                        return '<h' + level + '><a id="' + escapedText + '" class="anchor" href="#' + escapedText +
                             '"><span class="anchor-link"></span></a>' +
                             text + '</h' + level + '>';
                     };
 
-                    renderer.code     = function (code, language) {
+                    renderer.code = function (code, language) {
                         var html;
-
-                        language = language || '';
 
                         if (language) {
                             html = hljs.highlight(language, code, true).value;
@@ -155,11 +201,12 @@ self.onmessage = function (event) {
 
                         return '<pre class="hljs"><code>' + html + '</code></pre>';
                     };
+
                     renderer.listitem = function (text) {
                         if (/^\s*\[[x ]\]\s*/.test(text)) {
                             text = text
-                                .replace(/^\s*\[ \]\s*/, '<input type="checkbox" disabled>')
-                                .replace(/^\s*\[x\]\s*/, '<input type="checkbox" disabled checked> ');
+                                .replace(/^\s*\[ \]\s*/, '<input type="checkbox">')
+                                .replace(/^\s*\[x\]\s*/, '<input type="checkbox" checked> ');
                             return '<li>' + text + '</li>';
                         } else {
                             return '<li>' + text + '</li>';
@@ -167,18 +214,11 @@ self.onmessage = function (event) {
                     };
 
                     marked.setOptions({
-                        renderer: renderer,
-                        breaks: true,
-                        pedantic: true,
-                        smartLists: true,
+                        renderer   : renderer,
+                        breaks     : true,
+                        pedantic   : true,
+                        smartLists : true,
                         smartypants: true
-                    });
-
-                    marked.setOptions({
-                        renderer : renderer,
-                        highlight: function (code) {
-                            return hljs.highlightAuto(code).value;
-                        }
                     });
 
                     beautified = marked(content);
@@ -198,11 +238,7 @@ self.onmessage = function (event) {
 
             if (!isMarkdown) {
                 beautified = Prism.highlight(formated, grammar, language, isUnicode);
-            }
 
-            html = '<div class="pretty-container">';
-
-            if (type !== 'markdown') {
                 lineRows = '<span class="line-numbers-rows">';
 
                 var lines = beautified.split('\n').length;
@@ -214,11 +250,13 @@ self.onmessage = function (event) {
                 lineRows += '</span>';
             }
 
+            html = '<div class="pretty-container">';
+
             html += '<' + (isMarkdown ? 'div' : 'pre') + ' class="language-pretty">';
             html += lineRows + beautified;
             html += '</' + (isMarkdown ? 'div' : 'pre') + '>';
 
-            if (headers && !isMarkdown) {
+            if (headers && headersData.length && !isMarkdown) {
                 html += template().render({
                     headers: headersData
                 });

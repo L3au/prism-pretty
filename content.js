@@ -1,11 +1,37 @@
 (function () {
-    var rootEl = document.documentElement;
-    var global_options, global_headers;
+    var rootEl;
+    var content;
 
-    var fontSrc      = chrome.runtime.getURL('css/droid-sans-mono.woff2');
-    var global_style = '@font-face{font-family:"Droid Sans Mono";src:url("fontSrc") format("woff2");}';
+    // 尽早判断内容，防止其他扩展污染
+    document.onreadystatechange = function () {
+        if (/te/.test(document.readyState)) {
+            // prevent complete
+            if (content) {
+                return;
+            }
 
-    global_style = '<style>' + global_style.replace('fontSrc', fontSrc) + '</style>';
+            rootEl = document.documentElement;
+
+            var body     = document.body;
+            var children = body.children;
+            var pre      = children[0];
+
+            if (children.length == 0) {
+                content = body.textContent;
+            }
+
+            if (pre && pre.nodeName == 'PRE'
+                && pre.getAttribute('style')) {
+                content = pre.textContent;
+            }
+
+            if (!content || !content.trim()) {
+                return;
+            }
+
+            new App();
+        }
+    };
 
     function $(v, c) {
         return (c || document).querySelector(v);
@@ -13,32 +39,6 @@
 
     function $$(v, c) {
         return [].slice.call((c || document).querySelectorAll(v));
-    }
-
-    function addClass(className, el) {
-        var classList = className.match(/\b[^\s]+\b/g) || [];
-
-        classList.forEach(function (cls) {
-            (el || rootEl).classList.add(cls);
-        });
-    }
-
-    function removeClass(className, el) {
-        var classList = className.match(/\b[^\s]+\b/g) || [];
-
-        classList.forEach(function (cls) {
-            (el || rootEl).classList.remove(cls);
-        });
-    }
-
-    function loading() {
-        var themeCls = 'prism-pretty-' + global_options.theme;
-        addClass('prism-pretty prism-pretty-spinner ' + themeCls);
-    }
-
-    function unloading() {
-        var themeCls = 'prism-pretty-' + global_options.theme;
-        removeClass('prism-pretty prism-pretty-spinner ' + themeCls);
     }
 
     function execScript(content) {
@@ -68,67 +68,95 @@
         return type;
     }
 
-    function getEntireHtml() {
-        var docType = new XMLSerializer().serializeToString(document.doctype);
-        return docType + '\n' + rootEl.outerHTML;
+    function getFontStyle() {
+        var fontSrc   = chrome.runtime.getURL('css/droid-sans-mono.woff2');
+        var fontStyle = '@font-face{font-family:"Droid Sans Mono";src:url("fontSrc") format("woff2");}';
+
+        fontStyle = '<style>' + fontStyle.replace('fontSrc', fontSrc) + '</style>';
+
+        return fontStyle;
     }
 
-    var promises = [
-        (function () {
-            return new Promise(function (resolve, reject) {
-                chrome.runtime.sendMessage({
-                    action: 'requestHeaders'
-                }, function (headers) {
-                    global_headers = headers;
-                    rootEl         = document.documentElement;
+    function App() {
+        this.init();
+    }
 
-                    if (headers.type == 'markdown') {
-                        global_options.theme = 'markdown';
-                    }
+    App.prototype = {
+        constructor: App,
 
-                    if (headers.type && headers.type != 'markdown') {
-                        loading();
-                    }
-
-                    resolve(headers);
-                });
-            });
-        }),
-
-        (function () {
-            return new Promise(function (resolve) {
-                if (/te/.test(document.readyState)) {
-                    resolve();
-                } else {
-                    document.addEventListener('DOMContentLoaded', resolve);
-                }
-            });
-        })
-    ];
-
-    var app = {
         init: function () {
             var self = this;
 
-            chrome.storage.sync.get(function (options) {
-                global_options = options;
+            Promise.all([
+                new Promise(function (resolve, reject) {
+                    chrome.storage.sync.get(function (options) {
+                        if (!options.enabled) {
+                            return reject();
+                        }
 
-                if (!options.enabled) {
+                        resolve(options);
+                    });
+                }),
+                new Promise(function (resolve, reject) {
+                    chrome.runtime.sendMessage({
+                        action: 'requestHeaders'
+                    }, function (headers) {
+                        resolve(headers);
+                    });
+                })
+            ]).then(function (result) {
+                var options = result[0];
+                var headers = result[1];
+
+                self.options = options;
+                self.headers = headers;
+
+                if (!self.parseContent()) {
                     return;
                 }
 
-                Promise.all(promises.map(function (p) {
-                    return p();
-                })).then(function () {
-                    if (!self.parseContent()) {
-                        unloading();
-                    }
-                });
+                if (headers.type == 'markdown') {
+                    options.theme = 'markdown';
+                }
+
+                self.sendPrettyMsg();
             });
+
+            self.addEvents();
+        },
+
+        loading: function () {
+            var options   = this.options;
+            var classList = [
+                'prism-pretty',
+                'prism-pretty-spinner',
+                'prism-pretty-' + options.theme
+            ];
+
+            classList.forEach(function (cls) {
+                rootEl.classList.add(cls);
+            });
+        },
+
+        unloading: function () {
+            var options   = this.options;
+            var classList = [
+                'prism-pretty',
+                'prism-pretty-spinner',
+                'prism-pretty-' + options.theme
+            ];
+
+            classList.forEach(function (cls) {
+                rootEl.classList.remove(cls);
+            });
+        },
+
+        addEvents: function () {
+            var self = this;
 
             chrome.storage.onChanged.addListener(function () {
                 if (rootEl.classList.contains('prism-pretty')) {
-                    location.reload();
+                    location.reload(true);
                 }
             });
 
@@ -137,40 +165,23 @@
 
                 if (action == 'prettyDocument') {
                     if (rootEl.classList.contains('prism-pretty')) {
-                        location.reload();
+                        location.reload(true);
                         return;
                     }
 
+                    self.headers.type = 'html';
+
                     // pretty html
-                    self.sendPrettyMsg('html');
+                    self.sendPrettyMsg();
                 }
             });
         },
 
         parseContent: function () {
-            var content = '';
-            var body = document.body;
-            var type = global_headers.type;
+            var options = this.options;
+            var headers = this.headers;
 
-            // fix somehow xxx...
-            if (!body) {
-                return;
-            }
-
-            var children = body.children;
-            var pre      = children[0];
-
-            if (type) {
-                content = body.textContent;
-            } else {
-                if (pre && pre.nodeName == 'PRE') {
-                    content = pre.textContent;
-                }
-            }
-
-            if (!content.trim()) {
-                return;
-            }
+            var type = headers.type;
 
             if (!type) {
                 try {
@@ -192,12 +203,14 @@
                 }
             }
 
+            headers.type = type;
+
             if (!type) {
                 return;
             }
 
             var tmpType = type;
-            var types   = global_options.formatTypes;
+            var types   = options.formatTypes;
 
             if (tmpType == 'json' || tmpType == 'jsonp') {
                 tmpType = 'js';
@@ -224,32 +237,26 @@
                 execScript(script);
             }
 
-            this.sendPrettyMsg(type, content);
-
             return true;
         },
 
-        sendPrettyMsg: function (type, content) {
-            var options = global_options;
-            var headers = global_headers;
+        sendPrettyMsg: function () {
+            var self    = this;
 
-            loading();
+            var options = self.options;
+            var headers = self.headers;
 
-            chrome.runtime.sendMessage({
-                type  : type,
-                action: 'insertCss'
-            });
+            self.loading();
 
             chrome.runtime.sendMessage({
                 action : 'prettify',
-                type   : type,
                 content: content,
-                headers: headers.headers,
-                options: options
+                options: options,
+                type   : headers.type,
+                headers: headers.headers
             }, function (response) {
                 if (!response) {
-                    unloading();
-                    return;
+                    return self.unloading();
                 }
 
                 var title     = document.title;
@@ -258,17 +265,15 @@
                 className += ' pretty-theme-' + options.theme;
                 className += ' pretty-size-' + options.fontSize;
 
+                var font = getFontStyle();
                 var meta = '<meta name="viewport" content="width=device-width,initial-scale=1">';
 
-                rootEl.innerHTML = '<head>' + meta + '</head><body>' + response + '</body>';
+                rootEl.innerHTML = '<head>' + meta + font + '</head><body>' + response + '</body>';
                 rootEl.className = className;
 
                 if (title) {
                     document.title = 'Prism Pretty: ' + title;
                 }
-
-                // load Droid Sans font
-                document.head.insertAdjacentHTML('beforeend', global_style);
 
                 // headers fade
                 var headerEl = $('.request-headers');
@@ -290,7 +295,7 @@
                 }
 
                 // markdown hash restore
-                if (type === 'markdown') {
+                if (headers.type === 'markdown') {
                     var hash = location.hash.slice(1);
 
                     if (!hash) {
@@ -316,6 +321,4 @@
             });
         }
     };
-
-    app.init();
 }).call();
