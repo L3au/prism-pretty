@@ -274,6 +274,7 @@ ul,
 ol {
   margin-top: 0;
   margin-bottom: 10.5px;
+  white-space: normal;
 }
 ul > li,
 ol > li {

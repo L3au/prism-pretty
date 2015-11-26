@@ -8,6 +8,10 @@ Install
 
 ![](img/screenshot.png)
 
+- [x] fdsafds
+- [ ] fdsafds
+- [x] fdsafds
+
 Allow local files
 ---
 
