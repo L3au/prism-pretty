@@ -52,7 +52,7 @@ App.prototype = {
                 rootEl = document.documentElement;
 
                 var content;
-                var body     = document.body;
+                var body     = document.body || {children: []};
                 var children = body.children;
                 var pre      = children[0];
 
@@ -238,7 +238,7 @@ App.prototype = {
     },
 
     sendPrettyMsg: function () {
-        var self    = this;
+        var self = this;
 
         var content = self.content;
         var options = self.options;
