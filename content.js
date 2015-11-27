@@ -90,7 +90,7 @@ App.prototype = {
                     resolve(options);
                 });
             }),
-            new Promise(function (resolve, reject) {
+            new Promise(function (resolve) {
                 chrome.runtime.sendMessage({
                     action: 'requestHeaders'
                 }, function (headers) {
@@ -115,7 +115,7 @@ App.prototype = {
 
             self.sendPrettyMsg();
         }).catch(function (e) {
-            // console.log(e);
+            // ignore promise exception
         });
 
         self.addEvents();
