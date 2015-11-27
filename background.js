@@ -218,7 +218,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
 });
 
-// update readme
+// popup readme
 chrome.runtime.onInstalled.addListener(function (details) {
     if (details.reason == 'install') {
         chrome.tabs.create({
