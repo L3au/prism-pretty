@@ -220,10 +220,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 // update readme
 chrome.runtime.onInstalled.addListener(function (details) {
-    if (details.reason == 'install' || details.reason == 'update') {
-        //chrome.tabs.create({
-        //    url   : chrome.runtime.getURL('README.md'),
-        //    active: true
-        //});
+    if (details.reason == 'install') {
+        chrome.tabs.create({
+            url   : chrome.runtime.getURL('README.md'),
+            active: true
+        });
     }
 });
