@@ -1,0 +1,8 @@
+*.log
+.DS_Store
+.idea/
+dist/
+archive.zip
+gulpfile.js
+package.json
+node_modules/
