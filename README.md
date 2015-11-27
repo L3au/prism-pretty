@@ -28,6 +28,10 @@ Features
 Change Log
 ---
 
+- v1.14.0
+  - some bugs fix
+  - experience improved
+
 - v1.12.12
   - features improved...
 
