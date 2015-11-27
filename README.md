@@ -18,7 +18,7 @@ Features
 - Precise detect
 - 3 Pretty Themes
 - HTML、JS、CSS、JSON、JSONP support
-- Show brief request headers
+- Show response headers
 - Transform unicode to text
 - Custom CSS setting
 - CSS properties preview
