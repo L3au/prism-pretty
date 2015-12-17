@@ -48,7 +48,8 @@ function processResponseHeaders(headers, url) {
     url = parseUrl(url);
 
     if (/\.(md|markdown)(?:[\?#]|$)/i.test(url.pathname) &&
-        (url.protocol == 'file:' || contentType.indexOf('text/plain') != -1)) {
+        (url.protocol == 'file:' ||
+        contentType.match(/(plain|markdown)/))) {
         type = 'markdown';
     }
 
