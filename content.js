@@ -55,7 +55,7 @@ App.prototype = {
     init: function () {
         var self = this;
 
-        var defer = Promise.defer ?  Promise.defer() : deferInit();
+        var defer = typeof Promise.defer === 'function' ?  Promise.defer() : deferInit();
 
         document.onreadystatechange = function () {
             if (document.readyState === 'interactive') {
