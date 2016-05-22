@@ -45,40 +45,40 @@ App.prototype = {
     init: function () {
         var self = this;
 
-        var defer = Promise.defer();
+        var contentPromise = new Promise(function (resolve, reject) {
+            document.onreadystatechange = function () {
+                if (document.readyState === 'interactive') {
+                    rootEl = document.documentElement;
 
-        document.onreadystatechange = function () {
-            if (document.readyState === 'interactive') {
-                rootEl = document.documentElement;
+                    var content;
+                    var body     = document.body || {children: []};
+                    var children = body.children;
+                    var pre      = children[0];
 
-                var content;
-                var body     = document.body || {children: []};
-                var children = body.children;
-                var pre      = children[0];
+                    if (children.length == 0) {
+                        content = body.textContent;
+                    }
 
-                if (children.length == 0) {
-                    content = body.textContent;
+                    if (pre && pre.nodeName == 'PRE'
+                        && pre.getAttribute('style')) {
+                        content = pre.textContent;
+                    }
+
+                    if (!content || !content.trim()) {
+                        reject();
+
+                        return chrome.runtime.sendMessage({
+                            action: 'cleanHeaders'
+                        });
+                    }
+
+                    resolve(content);
                 }
-
-                if (pre && pre.nodeName == 'PRE'
-                    && pre.getAttribute('style')) {
-                    content = pre.textContent;
-                }
-
-                if (!content || !content.trim()) {
-                    defer.reject();
-
-                    return chrome.runtime.sendMessage({
-                        action: 'cleanHeaders'
-                    });
-                }
-
-                defer.resolve(content);
-            }
-        };
+            };
+        });
 
         Promise.all([
-            defer.promise,
+            contentPromise,
             new Promise(function (resolve, reject) {
                 chrome.storage.sync.get(function (options) {
                     self.options = options;
