@@ -26,7 +26,6 @@
         "<all_urls>"
       ],
       "js": [
-        "js/esprima.js",
         "content.js"
       ],
       "css": [
