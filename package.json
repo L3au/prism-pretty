@@ -1,6 +1,6 @@
 {
   "name": "prism-pretty",
-  "version": "1.14.1",
+  "version": "1.14.2",
   "description": "![](img/logo.png)[Prism Pretty](https://github.com/L3au/Prism-Pretty) === A Chrome Extension to format/highlight/preview HTML/JS/CSS/Markdown code with Prism.js",
   "main": "background.js",
   "scripts": {
@@ -23,9 +23,7 @@
     "gulp-cssmin": "^0.1.7",
     "gulp-jsonminify": "^1.0.0",
     "gulp-less": "^3.0.5",
-    "gulp-uglify": "^1.5.1"
-  },
-  "dependencies": {
-    "gulp-zip": "^3.0.2"
+    "gulp-uglify": "^2.1.2",
+    "gulp-zip": "^4.0.0"
   }
 }

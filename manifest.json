@@ -1,44 +1,54 @@
 {
-    "manifest_version": 2,
-    "name": "Prism Pretty",
-    "version": "1.14.1",
-    "author": "L3au",
-    "description": "A Chrome Extension to format/highlight/preview HTML/JS/CSS/Markdown code with Prism.js",
-    "minimum_chrome_version": "33.0.1750.117",
-    "permissions": [
-        "tabs",
-        "<all_urls>",
-        "storage",
-        "webRequest",
-        "contextMenus"
-    ],
-    "update_url": "http://clients2.google.com/service/update2/crx",
-    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-    "background": {
-        "scripts": ["background.js"]
-    },
-    "content_scripts": [
-        {
-            "matches": ["<all_urls>"],
-            "js": ["content.js"],
-            "css": ["css/prism.css"],
-            "run_at": "document_start"
-        }
-    ],
-    "web_accessible_resources": [
-        "*.js",
-        "js/*",
-        "css/*",
-        "html/*"
-    ],
-    "browser_action": {
-        "default_icon": "icon/icon_128.png",
-        "default_title": "Prism Pretty",
-        "default_popup": "html/popup.html"
-    },
-    "icons": {
-        "16": "icon/icon_16.png",
-        "48": "icon/icon_48.png",
-        "128": "icon/icon_128.png"
+  "manifest_version": 2,
+  "name": "Prism Pretty",
+  "version": "1.14.1",
+  "author": "L3au",
+  "description": "A Chrome Extension to format/highlight/preview HTML/JS/CSS/Markdown code with Prism.js",
+  "minimum_chrome_version": "50",
+  "permissions": [
+    "tabs",
+    "<all_urls>",
+    "storage",
+    "webRequest",
+    "webRequestBlocking",
+    "contextMenus"
+  ],
+  "update_url": "http://clients2.google.com/service/update2/crx",
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';",
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "js/esprima.js",
+        "content.js"
+      ],
+      "css": [
+        "css/prism.css"
+      ],
+      "run_at": "document_start"
     }
+  ],
+  "web_accessible_resources": [
+    "*.js",
+    "js/*",
+    "css/*",
+    "html/*"
+  ],
+  "browser_action": {
+    "default_icon": "icon/icon_128.png",
+    "default_title": "Prism Pretty",
+    "default_popup": "html/popup.html"
+  },
+  "icons": {
+    "16": "icon/icon_16.png",
+    "48": "icon/icon_48.png",
+    "128": "icon/icon_128.png"
+  }
 }

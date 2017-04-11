@@ -28,6 +28,9 @@ Features
 Change Log
 ---
 
+- v1.14.2
+  - fix chrome charset
+
 - v1.14.1
   - fix Promise.defer missing
 

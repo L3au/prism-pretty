@@ -67,9 +67,6 @@
 .prism-pretty .request-headers .aproxy {
   color: #f26651;
 }
-.prism-pretty .request-headers tr:nth-child(2) {
-  border-bottom: 1px dashed #D5D5D5;
-}
 .prism-pretty .request-headers tr > td {
   vertical-align: top;
 }
