@@ -1,5 +1,7 @@
 ![](img/logo.png)[Prism Pretty](https://github.com/L3au/Prism-Pretty)
 ===
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/L3au/Prism-Pretty.svg)](https://greenkeeper.io/)
 A Chrome Extension to format/highlight/preview HTML/JS/CSS/Markdown code with Prism.js
 
 Install
