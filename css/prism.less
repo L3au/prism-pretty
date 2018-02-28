@@ -13,7 +13,6 @@
         bottom: 0;
         opacity: 0;
         visibility: hidden;
-        -webkit-transition: .2s ease;
         transition: .2s ease;
     }
 
@@ -384,7 +383,8 @@
     }
     .color, .abslength, .easing, .time, .angle, .fontfamily, .gradient, .entity, .url {
         cursor: help;
-        outline: 1px solid;
+        outline: 1px dotted rgba(0,0,0,.2);
+        outline-offset: 1px;
         // text-shadow: 0 1px #FFF, 0 0 .2em rgba(255, 102, 0, 0.5);
     }
     .url {
