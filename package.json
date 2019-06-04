@@ -17,13 +17,13 @@
   },
   "homepage": "https://github.com/L3au/Prism-Pretty#readme",
   "devDependencies": {
-    "del": "^2.1.0",
-    "gulp": "^3.9.0",
-    "gulp-autoprefixer": "^3.1.0",
-    "gulp-cssmin": "^0.1.7",
-    "gulp-jsonminify": "^1.0.0",
-    "gulp-less": "^3.0.5",
-    "gulp-uglify": "^2.1.2",
-    "gulp-zip": "^4.0.0"
+    "del": "2.2.2",
+    "gulp": "3.9.1",
+    "gulp-autoprefixer": "3.1.1",
+    "gulp-cssmin": "0.1.7",
+    "gulp-jsonminify": "1.1.0",
+    "gulp-less": "3.5.0",
+    "gulp-uglify": "2.1.2",
+    "gulp-zip": "4.2.0"
   }
 }
